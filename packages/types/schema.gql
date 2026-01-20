@@ -1,0 +1,13 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Transaction {
+  id: ID!
+  name: String!
+  amount: Float!
+}
+
+type Query {
+  getTransactions: [Transaction!]!
+}

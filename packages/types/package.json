@@ -1,0 +1,19 @@
+{
+  "name": "@repo/types",
+  "version": "0.0.0",
+  "private": true,
+  "description": "",
+  "main": "index.ts",
+  "types": "index.ts",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "scripts": {
+    "generate": "graphql-codegen --config codegen.ts"
+  },
+  "packageManager": "pnpm@10.28.0",
+  "devDependencies": {
+    "@graphql-codegen/cli": "^6.1.1",
+    "@graphql-codegen/typescript": "^5.0.7"
+  }
+}
