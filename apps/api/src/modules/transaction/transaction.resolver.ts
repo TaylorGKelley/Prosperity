@@ -1,5 +1,5 @@
 import { Query, Resolver } from '@nestjs/graphql';
-import { Transaction } from 'src/schema/transaction.schema';
+import { Transaction } from '../../schema/transaction.schema';
 import { TransactionService } from './transaction.service';
 
 @Resolver()
