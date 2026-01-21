@@ -6,9 +6,13 @@
   "scripts": {
     "dev": "turbo dev"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "Budget",
+    "Finance Tracking",
+    "Money"
+  ],
+  "author": "Taylor Kelley",
+  "license": "AGPL-3.0-only",
   "packageManager": "pnpm@10.28.0",
   "devDependencies": {
     "@types/node": "^25.0.9",
