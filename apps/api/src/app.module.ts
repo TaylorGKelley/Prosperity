@@ -7,27 +7,40 @@ import { TransactionResolver } from './modules/transaction/transaction.resolver'
 import { TransactionService } from './modules/transaction/transaction.service';
 import { HealthController } from './health/health.controller';
 import { HealthService } from './health/health.service';
-import { auth } from './lib/auth';
 import { AuthModule } from '@thallesp/nestjs-better-auth';
 import { ConfigModule } from '@nestjs/config';
+import { DatabaseModule } from './lib/db/database.module';
+import { DATABASE_CONNECTION } from './lib/db/database-connection';
+import { NodePgDatabase } from 'drizzle-orm/node-postgres';
+import { betterAuth } from 'better-auth';
+import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      load: [],
-    }),
-
+    ConfigModule.forRoot(),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), '../../packages/types/schema.gql'),
+      autoSchemaFile: join(
+        process.cwd(),
+        './src/lib/graphhql/schema/schema.gql',
+      ),
       context: ({ req, res }: { req: Request; res: Response }) => ({
         req,
         res,
       }), // Incase direct access is needed (like for better-auth usage or setting/reading cookies)
     }),
-
-    AuthModule.forRoot({ auth }),
+    DatabaseModule,
+    AuthModule.forRootAsync({
+      imports: [DatabaseModule],
+      useFactory: (db: NodePgDatabase) => ({
+        auth: betterAuth({
+          database: drizzleAdapter(db, {
+            provider: 'pg',
+          }),
+        }),
+      }),
+      inject: [DATABASE_CONNECTION],
+    }),
   ],
   controllers: [HealthController],
   providers: [HealthService, TransactionResolver, TransactionService],
