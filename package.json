@@ -1,23 +1,23 @@
 {
-	"name": "@taylorgkelley/prosperity",
-	"version": "1.0.0",
-	"description": "",
-	"main": "index.js",
-	"scripts": {
-		"dev": "turbo dev",
-		"docker:up": "docker compose up -d"
-	},
-	"keywords": [
-		"Budget",
-		"Finance Tracking",
-		"Money"
-	],
-	"author": "Taylor Kelley",
-	"license": "AGPL-3.0-only",
-	"packageManager": "pnpm@10.28.0",
-	"devDependencies": {
-		"@types/node": "^25.0.9",
-		"turbo": "^2.7.5",
-		"typescript": "^5.9.3"
-	}
+  "name": "@taylorgkelley/prosperity",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "turbo dev",
+    "docker:up": "docker compose --profile development up -d"
+  },
+  "keywords": [
+    "Budget",
+    "Finance Tracking",
+    "Money"
+  ],
+  "author": "Taylor Kelley",
+  "license": "AGPL-3.0-only",
+  "packageManager": "pnpm@10.28.0",
+  "devDependencies": {
+    "@types/node": "^25.0.9",
+    "turbo": "^2.7.5",
+    "typescript": "^5.9.3"
+  }
 }

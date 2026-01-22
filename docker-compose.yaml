@@ -1,12 +1,12 @@
 services:
   database:
-    image: postgres@latest
+    image: postgres:latest
     container_name: prosperity-database
     restart: unless-stopped
     environment:
       POSTGRES_DB: prosperity
       POSTGRES_USER: prospering
-      POSTGRES_PASSWORD: paonapowgnzjog!fa4$p
+      POSTGRES_PASSWORD: paonapowgnzjog!fa4p
     ports:
       - '7700:7700'
     volumes:
