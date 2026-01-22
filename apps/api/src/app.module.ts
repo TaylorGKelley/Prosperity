@@ -9,24 +9,14 @@ import { HealthController } from './health/health.controller';
 import { HealthService } from './health/health.service';
 import { auth } from './lib/auth';
 import { AuthModule } from '@thallesp/nestjs-better-auth';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import typeorm from './config/typeorm';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Transaction } from './entities/transaction.entity';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [typeorm],
+      load: [],
     }),
-
-    TypeOrmModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: async (configService: ConfigService) =>
-        configService.get('typeorm')!,
-    }),
-    TypeOrmModule.forFeature([Transaction]),
 
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,

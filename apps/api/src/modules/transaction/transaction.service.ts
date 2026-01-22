@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Transaction } from '../../entities/transaction.entity';
+import { Transaction } from 'src/lib/graphhql/transaction.schema';
 
 @Injectable()
 export class TransactionService {
