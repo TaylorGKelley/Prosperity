@@ -10,4 +10,16 @@ export class Transaction {
 
   @Field(() => Float)
   amount: number;
+
+  @Field(() => Date)
+  date: Date;
+
+  @Field(() => String)
+  description: string;
+
+  @Field(() => String)
+  status: string;
+
+  @Field(() => String)
+  type: string;
 }
