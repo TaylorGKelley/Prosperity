@@ -13,7 +13,7 @@
     "Money"
   ],
   "author": "Taylor Kelley",
-  "license": "AGPL-3.0-only",
+  "license": "BSL-1.1",
   "packageManager": "pnpm@10.28.0",
   "devDependencies": {
     "@types/node": "^25.0.9",
