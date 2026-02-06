@@ -1,20 +1,32 @@
-export default class TransactionClient {
-  private readonly TELLER_URL = 'https://api.teller.io';
-  private readonly cert: Buffer;
-  private readonly key: Buffer;
-  private readonly applicationId: string;
+import { type AxiosInstance } from 'axios';
+import https from 'node:https';
+import { TransactionResponse } from './types/transaction.response';
 
-  constructor({
-    cert,
-    key,
-    applicationId,
-  }: {
-    cert: Buffer;
-    key: Buffer;
-    applicationId: string;
-  }) {
-    this.cert = cert;
-    this.key = key;
-    this.applicationId = applicationId;
+export default class TransactionClient {
+  private readonly axiosClient: AxiosInstance;
+  private readonly accountId: string;
+
+  constructor(
+    accountId: string,
+    {
+      axiosClient,
+    }: {
+      axiosClient: AxiosInstance;
+    },
+  ) {
+    this.axiosClient = axiosClient;
+    this.accountId = accountId;
+  }
+
+  public async list() {
+    const response = await this.axiosClient.get<TransactionResponse[]>(
+      `/accounts/${this.accountId}/transactions`,
+      {
+        headers: {
+          Authorization: `Bearer ${this.applicationId}`,
+        },
+      },
+    );
+    return response.data;
   }
 }

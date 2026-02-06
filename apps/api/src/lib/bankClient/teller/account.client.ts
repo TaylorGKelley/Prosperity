@@ -1,20 +1,9 @@
-export default class AccountClient {
-  private readonly TELLER_URL = 'https://api.teller.io';
-  private readonly cert: Buffer;
-  private readonly key: Buffer;
-  private readonly applicationId: string;
+import { type AxiosInstance } from 'axios';
 
-  constructor({
-    cert,
-    key,
-    applicationId,
-  }: {
-    cert: Buffer;
-    key: Buffer;
-    applicationId: string;
-  }) {
-    this.cert = cert;
-    this.key = key;
-    this.applicationId = applicationId;
+export default class AccountClient {
+  private readonly axiosClient: AxiosInstance;
+
+  constructor({ axiosClient }: { axiosClient: AxiosInstance }) {
+    this.axiosClient = axiosClient;
   }
 }
