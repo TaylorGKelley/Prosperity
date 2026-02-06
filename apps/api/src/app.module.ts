@@ -9,11 +9,11 @@ import { HealthController } from './health/health.controller';
 import { HealthService } from './health/health.service';
 import { AuthModule } from '@thallesp/nestjs-better-auth';
 import { ConfigModule } from '@nestjs/config';
-import { DatabaseModule } from './lib/db/database.module';
-import { DATABASE_CONNECTION } from './lib/db/database-connection';
+import DatabaseModule, { DATABASE_CONNECTION } from './lib/db/database.module';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
+import { BankClientModule } from './lib/bankClient/bankClient.module';
 
 @Module({
   imports: [
@@ -41,6 +41,7 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle';
       }),
       inject: [DATABASE_CONNECTION],
     }),
+    BankClientModule,
   ],
   controllers: [HealthController],
   providers: [HealthService, TransactionResolver, TransactionService],
