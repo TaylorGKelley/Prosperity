@@ -15,6 +15,13 @@
       "when": 1771181410881,
       "tag": "0001_chunky_multiple_man",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1771181503259,
+      "tag": "0002_clammy_punisher",
+      "breakpoints": true
     }
   ]
 }

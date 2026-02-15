@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import { authClient } from './lib/auth/auth';
-import Link from 'next/link';
-import { useState } from 'react';
+import Image from "next/image";
+import { authClient } from "@/lib/auth/auth";
+import Link from "next/link";
+import { useState } from "react";
 
 export default function Home() {
   // better-auth example
   const { data: session, isPending } = authClient.useSession();
-  const [activeForm, setActiveForm] = useState<'login' | 'signup'>('login');
+  const [activeForm, setActiveForm] = useState<"sign-in" | "signup">("sign-in");
 
   if (isPending) {
     return (
@@ -22,7 +22,8 @@ export default function Home() {
         <h1>Welcome, {session.user.name}</h1>
         <button
           className="border border-red-500 text-red-500 p-4 rounded-lg"
-          onClick={() => authClient.signOut()}>
+          onClick={() => authClient.signOut()}
+        >
           Signout
         </button>
       </div>
@@ -31,7 +32,7 @@ export default function Home() {
 
   return (
     <div className="container flex justify-center items-center">
-      <button onClick={() => setActiveForm('login')}>Login</button>
+      <button onClick={() => setActiveForm("sign-in")}>sign-in</button>
     </div>
   );
 }
