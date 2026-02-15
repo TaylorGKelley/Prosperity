@@ -7,7 +7,15 @@ export class TransactionService {
     await Promise.resolve();
 
     return [
-      { id: '0d8bb298-c0cf-4552-8db2-183a8f7128ac', name: 'test', amount: 0.0 },
+      {
+        id: '0d8bb298-c0cf-4552-8db2-183a8f7128ac',
+        name: 'test',
+        amount: 0.0,
+        date: new Date(),
+        description: '',
+        status: 'pending',
+        type: 'income',
+      },
     ];
   }
 }
