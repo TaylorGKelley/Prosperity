@@ -1,5 +1,4 @@
 import { type AxiosInstance } from 'axios';
-import https from 'node:https';
 import { TransactionResponse } from './types/transaction.response';
 
 export default class TransactionClient {
@@ -18,12 +17,12 @@ export default class TransactionClient {
     this.accountId = accountId;
   }
 
-  public async list() {
+  public async list(options: { accessToken: string }) {
     const response = await this.axiosClient.get<TransactionResponse[]>(
       `/accounts/${this.accountId}/transactions`,
       {
         headers: {
-          Authorization: `Bearer ${this.applicationId}`,
+          Authorization: `Bearer ${options.accessToken}`,
         },
       },
     );

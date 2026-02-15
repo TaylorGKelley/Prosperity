@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { BANK_CLIENT } from '../config/bankClient.config';
 import TellerClient from './teller/client';
+
+export const BANK_CLIENT = Symbol.for('BANK_CLIENT');
 
 @Module({
   imports: [ConfigModule],

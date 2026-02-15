@@ -1,7 +1,28 @@
-import { betterAuth } from 'better-auth';
+import { betterAuth, type BetterAuthOptions } from 'better-auth';
+import { twoFactor } from 'better-auth/plugins';
+import { passkey } from '@better-auth/passkey';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 
+export const authSettings = {
+  appName: 'Prosperity',
+  baseURL: process.env.BETTER_AUTH_BASE_URL as string,
+  secret: process.env.BETTER_AUTH_SECRET as string,
+  emailAndPassword: {
+    enabled: true,
+    requireEmailVerification: true,
+  },
+  sendVerificationEmail: async () => {},
+  socialProviders: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    },
+  },
+  plugins: [twoFactor(), passkey()],
+} as BetterAuthOptions;
+
 export const auth = betterAuth({
+  ...authSettings,
   // Placeholder drizzle adapter for use when generating migrations
   database: drizzleAdapter(
     {},

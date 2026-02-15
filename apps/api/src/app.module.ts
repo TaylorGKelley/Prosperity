@@ -14,6 +14,7 @@ import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { BankClientModule } from './lib/bankClient/bankClient.module';
+import { authSettings } from './lib/auth/auth';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { BankClientModule } from './lib/bankClient/bankClient.module';
       imports: [DatabaseModule],
       useFactory: (db: NodePgDatabase) => ({
         auth: betterAuth({
+          ...authSettings,
           database: drizzleAdapter(db, {
             provider: 'pg',
           }),

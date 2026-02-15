@@ -3,7 +3,6 @@ import https from 'node:https';
 import AccountClient from './account.client';
 import BalanceClient from './balance.client';
 import TransactionClient from './transaction.client';
-import { Transaction } from 'src/lib/graphhql/transaction.schema';
 
 export default class TellerClient {
   static BASE_URL = 'https://api.teller.io' as const;
