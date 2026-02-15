@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "turbo dev",
-    "docker:up": "docker compose --profile development up -d"
+    "db:migrate": "turbo db:migrate",
+    "docker:up": "docker-compose --profile=development up -d"
   },
   "keywords": [
     "Budget",

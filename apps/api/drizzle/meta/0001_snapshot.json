@@ -1,6 +1,6 @@
 {
-  "id": "b2c441c7-3c1f-47fa-9504-b601fb043aa8",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "8b496ec1-8a19-43fc-b2fa-6c68d291e05c",
+  "prevId": "b2c441c7-3c1f-47fa-9504-b601fb043aa8",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -33,7 +33,7 @@
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
-          "default": "'FUSCHIA'"
+          "default": "'STONE'"
         },
         "access_token": {
           "name": "access_token",
@@ -373,7 +373,7 @@
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
-          "default": "'WALLET'"
+          "default": "'STETHOSCOPE'"
         },
         "color": {
           "name": "color",
@@ -381,7 +381,7 @@
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
-          "default": "'SKY'"
+          "default": "'BLUE'"
         },
         "start_date": {
           "name": "start_date",
@@ -442,7 +442,7 @@
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
-          "default": "'CYAN'"
+          "default": "'VIOLET'"
         },
         "is_default": {
           "name": "is_default",
@@ -615,7 +615,7 @@
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
-          "default": "'RABBIT'"
+          "default": "'ANCHOR'"
         },
         "color": {
           "name": "color",
@@ -623,7 +623,7 @@
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
-          "default": "'ORANGE'"
+          "default": "'YELLOW'"
         },
         "target_amount": {
           "name": "target_amount",

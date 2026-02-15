@@ -5,7 +5,11 @@
       "dependsOn": ["^build"],
       "outputs": [".next/**", "dist/**", ".expo/**"]
     },
-    "dev": { "cache": false, "persistent": true },
+    "db:migrate": {
+      "cache": false,
+      "persistent": false
+    },
+    "dev": { "cache": false, "persistent": true, "dependsOn": ["db:migrate"] },
     "lint": {}
   }
 }

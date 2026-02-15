@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 import { betterAuth, type BetterAuthOptions } from 'better-auth';
 import { twoFactor } from 'better-auth/plugins';
 import { passkey } from '@better-auth/passkey';
@@ -5,6 +7,7 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 
 export const authSettings = {
   appName: 'Prosperity',
+  trustedOrigins: [process.env.WEB_URL],
   baseURL: process.env.BETTER_AUTH_BASE_URL as string,
   secret: process.env.BETTER_AUTH_SECRET as string,
   emailAndPassword: {
