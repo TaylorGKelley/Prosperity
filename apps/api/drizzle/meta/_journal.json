@@ -22,6 +22,27 @@
       "when": 1771181503259,
       "tag": "0002_clammy_punisher",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1771200543288,
+      "tag": "0003_yellow_typhoid_mary",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1771200551961,
+      "tag": "0004_mature_ricochet",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1771200573107,
+      "tag": "0005_watery_sharon_ventura",
+      "breakpoints": true
     }
   ]
 }
