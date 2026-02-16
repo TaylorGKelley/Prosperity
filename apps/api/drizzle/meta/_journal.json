@@ -8,6 +8,13 @@
       "when": 1771204376734,
       "tag": "0000_medical_norrin_radd",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1771204408394,
+      "tag": "0001_free_jack_power",
+      "breakpoints": true
     }
   ]
 }
