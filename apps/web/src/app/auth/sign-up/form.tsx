@@ -1,19 +1,32 @@
 "use client";
 
-import { signIn } from "@/actions/auth/sign-in";
-import Link from "next/link";
+import { signUp } from "@/actions/auth/sign-up";
 import { useActionState } from "react";
 
-export default function SignInForm() {
-  const [state, action, pending] = useActionState(signIn, {
+export default function SignUpForm() {
+  const [state, action, pending] = useActionState(signUp, {
     values: {
+      name: "",
       email: "",
       password: "",
+      passwordConfirm: "",
     },
   });
 
   return (
     <form action={action} className="grid w-fit gap-4">
+      <div className="grid w-sm">
+        <label htmlFor="name">Name:</label>
+        <input
+          id="name"
+          name="name"
+          type="text"
+          defaultValue={state.values.name}
+          required
+          aria-describedby="password-error"
+          className="px-4 py-2 border rounded-xl"
+        />
+      </div>
       <div className="grid w-sm">
         <label htmlFor="email">Email:</label>
         <input
@@ -44,6 +57,21 @@ export default function SignInForm() {
           <p id="password-error">{state.errors.password.join(", ")}</p>
         )}
       </div>
+      <div className="grid w-sm">
+        <label htmlFor="password">Password:</label>
+        <input
+          type="passwordConfirm"
+          id="passwordConfirm"
+          name="passwordConfirm"
+          defaultValue={state.values.passwordConfirm}
+          required
+          aria-describedby="password-error"
+          className="px-4 py-2 border rounded-xl"
+        />
+        {state.errors?.passwordConfirm && (
+          <p id="password-error">{state.errors.passwordConfirm.join(", ")}</p>
+        )}
+      </div>
       {state.message && <p aria-live="polite">{state.message}</p>}
       <button
         type="submit"
@@ -52,9 +80,6 @@ export default function SignInForm() {
       >
         {pending ? "Logging in..." : "sign-in"}
       </button>
-      <p>
-        Dont have an account? <Link href="/auth/sign-up">Sign up</Link>
-      </p>
     </form>
   );
 }
