@@ -1,6 +1,6 @@
 // Bucket file to import all schema's for drizzle
 export * from './user.schema';
-export * from './account.schema';
+export * from './bank.schema';
 export * from './category.schema';
 export * from './budget.schema';
 export * from './transaction.schema';

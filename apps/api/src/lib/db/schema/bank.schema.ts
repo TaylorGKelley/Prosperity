@@ -4,8 +4,8 @@ import { relations } from 'drizzle-orm';
 import { transactionTable } from './transaction.schema';
 import { colorEnum } from './category.schema';
 
-export const accountTable = pgTable(
-  'account',
+export const bankTable = pgTable(
+  'bank',
   {
     id: uuid('id').primaryKey().defaultRandom(),
     tellerId: varchar('teller_id', { length: 256 }).notNull(),
@@ -19,7 +19,7 @@ export const accountTable = pgTable(
       .default(
         colorEnum.enumValues[
           Math.floor(Math.random() * colorEnum.enumValues.length)
-        ]
+        ],
       ),
     accessToken: text('access_token').notNull(),
     accessTokenIV: varchar('access_token_iv', { length: 64 }).notNull(),
@@ -27,13 +27,13 @@ export const accountTable = pgTable(
   (table) => [
     unique().on(table.id),
     unique().on(table.tellerId).nullsNotDistinct(),
-  ]
+  ],
 );
 
-export const accountRelations = relations(accountTable, ({ one, many }) => ({
+export const accountRelations = relations(bankTable, ({ one, many }) => ({
   transactions: many(transactionTable),
   budget: one(budgetTable, {
-    fields: [accountTable.budgetId],
+    fields: [bankTable.budgetId],
     references: [budgetTable.id],
   }),
 }));

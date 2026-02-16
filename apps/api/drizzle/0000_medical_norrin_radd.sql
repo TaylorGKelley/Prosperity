@@ -3,14 +3,33 @@ CREATE TYPE "public"."icon" AS ENUM('ALARM_CLOCK', 'ALBUM', 'AMBULANCE', 'AMPHOR
 CREATE TYPE "public"."status" AS ENUM('POSTED', 'PENDING');--> statement-breakpoint
 CREATE TYPE "public"."transaction_type" AS ENUM('CASH', 'DEBIT_CARD', 'CREDIT_CARD', 'BANK_TRANSFER', 'CHECK', 'GIFT_CARD');--> statement-breakpoint
 CREATE TABLE "account" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"teller_id" varchar(256) NOT NULL,
-	"budget_id" uuid NOT NULL,
-	"color" "color" DEFAULT 'FUSCHIA' NOT NULL,
-	"access_token" text NOT NULL,
-	"access_token_iv" varchar(64) NOT NULL,
-	CONSTRAINT "account_id_unique" UNIQUE("id"),
-	CONSTRAINT "account_teller_id_unique" UNIQUE NULLS NOT DISTINCT("teller_id")
+	"id" text PRIMARY KEY NOT NULL,
+	"account_id" text NOT NULL,
+	"provider_id" text NOT NULL,
+	"user_id" text NOT NULL,
+	"access_token" text,
+	"refresh_token" text,
+	"id_token" text,
+	"access_token_expires_at" timestamp,
+	"refresh_token_expires_at" timestamp,
+	"scope" text,
+	"password" text,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "passkey" (
+	"id" text PRIMARY KEY NOT NULL,
+	"name" text,
+	"public_key" text NOT NULL,
+	"user_id" text NOT NULL,
+	"credential_id" text NOT NULL,
+	"counter" integer NOT NULL,
+	"device_type" text NOT NULL,
+	"backed_up" boolean NOT NULL,
+	"transports" text,
+	"created_at" timestamp,
+	"aaguid" text
 );
 --> statement-breakpoint
 CREATE TABLE "session" (
@@ -25,6 +44,13 @@ CREATE TABLE "session" (
 	CONSTRAINT "session_token_unique" UNIQUE("token")
 );
 --> statement-breakpoint
+CREATE TABLE "two_factor" (
+	"id" text PRIMARY KEY NOT NULL,
+	"secret" text NOT NULL,
+	"backup_codes" text NOT NULL,
+	"user_id" text NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE "user" (
 	"id" text PRIMARY KEY NOT NULL,
 	"name" text NOT NULL,
@@ -33,6 +59,7 @@ CREATE TABLE "user" (
 	"image" text,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
+	"two_factor_enabled" boolean DEFAULT false,
 	CONSTRAINT "user_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
@@ -49,13 +76,24 @@ CREATE TABLE "users" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL
 );
 --> statement-breakpoint
+CREATE TABLE "bank" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"teller_id" varchar(256) NOT NULL,
+	"budget_id" uuid NOT NULL,
+	"color" "color" DEFAULT 'FUSCHIA' NOT NULL,
+	"access_token" text NOT NULL,
+	"access_token_iv" varchar(64) NOT NULL,
+	CONSTRAINT "bank_id_unique" UNIQUE("id"),
+	CONSTRAINT "bank_teller_id_unique" UNIQUE NULLS NOT DISTINCT("teller_id")
+);
+--> statement-breakpoint
 CREATE TABLE "category" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"budget_id" uuid NOT NULL,
 	"name" varchar NOT NULL,
 	"amount" numeric NOT NULL,
-	"icon" "icon" DEFAULT 'WALLET' NOT NULL,
-	"color" "color" DEFAULT 'SKY' NOT NULL,
+	"icon" "icon" DEFAULT 'RECEIPT_TEXT' NOT NULL,
+	"color" "color" DEFAULT 'STONE' NOT NULL,
 	"start_date" date DEFAULT now() NOT NULL,
 	"end_date" date
 );
@@ -63,7 +101,7 @@ CREATE TABLE "category" (
 CREATE TABLE "budget" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" varchar(256) NOT NULL,
-	"color" "color" DEFAULT 'CYAN' NOT NULL,
+	"color" "color" DEFAULT 'BLUE' NOT NULL,
 	"is_default" boolean DEFAULT false NOT NULL,
 	CONSTRAINT "budget_id_unique" UNIQUE("id"),
 	CONSTRAINT "budget_name_unique" UNIQUE("name")
@@ -72,7 +110,7 @@ CREATE TABLE "budget" (
 CREATE TABLE "transaction" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"teller_id" varchar(256) NOT NULL,
-	"account_id" uuid NOT NULL,
+	"bank_id" uuid NOT NULL,
 	"category_id" uuid,
 	"amount" real NOT NULL,
 	"date" date DEFAULT now() NOT NULL,
@@ -87,8 +125,8 @@ CREATE TABLE "saving_goal" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"budget_id" uuid NOT NULL,
 	"title" varchar(256) NOT NULL,
-	"icon" "icon" DEFAULT 'RABBIT' NOT NULL,
-	"color" "color" DEFAULT 'ORANGE' NOT NULL,
+	"icon" "icon" DEFAULT 'SNOWFLAKE' NOT NULL,
+	"color" "color" DEFAULT 'PINK' NOT NULL,
 	"target_amount" real NOT NULL,
 	"current_amount" real DEFAULT 0 NOT NULL,
 	"contribution_amount" real NOT NULL,
@@ -104,13 +142,21 @@ CREATE TABLE "user_budget" (
 	CONSTRAINT "user_budget_user_id_budget_id_pk" PRIMARY KEY("user_id","budget_id")
 );
 --> statement-breakpoint
-ALTER TABLE "account" ADD CONSTRAINT "account_budget_id_budget_id_fk" FOREIGN KEY ("budget_id") REFERENCES "public"."budget"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "account" ADD CONSTRAINT "account_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "passkey" ADD CONSTRAINT "passkey_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "session" ADD CONSTRAINT "session_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "two_factor" ADD CONSTRAINT "two_factor_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "bank" ADD CONSTRAINT "bank_budget_id_budget_id_fk" FOREIGN KEY ("budget_id") REFERENCES "public"."budget"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "category" ADD CONSTRAINT "category_budget_id_budget_id_fk" FOREIGN KEY ("budget_id") REFERENCES "public"."budget"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "transaction" ADD CONSTRAINT "transaction_account_id_account_id_fk" FOREIGN KEY ("account_id") REFERENCES "public"."account"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "transaction" ADD CONSTRAINT "transaction_bank_id_bank_id_fk" FOREIGN KEY ("bank_id") REFERENCES "public"."bank"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "transaction" ADD CONSTRAINT "transaction_category_id_category_id_fk" FOREIGN KEY ("category_id") REFERENCES "public"."category"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "saving_goal" ADD CONSTRAINT "saving_goal_budget_id_budget_id_fk" FOREIGN KEY ("budget_id") REFERENCES "public"."budget"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "user_budget" ADD CONSTRAINT "user_budget_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "user_budget" ADD CONSTRAINT "user_budget_budget_id_budget_id_fk" FOREIGN KEY ("budget_id") REFERENCES "public"."budget"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+CREATE INDEX "account_userId_idx" ON "account" USING btree ("user_id");--> statement-breakpoint
+CREATE INDEX "passkey_userId_idx" ON "passkey" USING btree ("user_id");--> statement-breakpoint
+CREATE INDEX "passkey_credentialID_idx" ON "passkey" USING btree ("credential_id");--> statement-breakpoint
 CREATE INDEX "session_userId_idx" ON "session" USING btree ("user_id");--> statement-breakpoint
+CREATE INDEX "twoFactor_secret_idx" ON "two_factor" USING btree ("secret");--> statement-breakpoint
+CREATE INDEX "twoFactor_userId_idx" ON "two_factor" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX "verification_identifier_idx" ON "verification" USING btree ("identifier");

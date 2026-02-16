@@ -29,7 +29,7 @@ export const signIn = async (
     }
 
     const response = await authClient.signIn.email(output.data);
-
+    console.log(response);
     if (response.error) {
       throw new Error(response.error.message);
     }

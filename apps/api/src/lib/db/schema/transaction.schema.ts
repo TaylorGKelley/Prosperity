@@ -9,7 +9,7 @@ import {
   varchar,
 } from 'drizzle-orm/pg-core';
 import { categoryTable } from './category.schema';
-import { accountTable } from './account.schema';
+import { bankTable } from './bank.schema';
 import { relations } from 'drizzle-orm';
 
 export const transactionTypeEnum = pgEnum('transaction_type', [
@@ -63,8 +63,8 @@ export type TransactionMetadata = {
 export const transactionTable = pgTable('transaction', {
   id: uuid('id').primaryKey().defaultRandom(),
   tellerId: varchar('teller_id', { length: 256 }).unique().notNull(),
-  accountId: uuid('account_id')
-    .references(() => accountTable.id, {
+  bankId: uuid('bank_id')
+    .references(() => bankTable.id, {
       onDelete: 'cascade',
     })
     .notNull(),
@@ -80,8 +80,8 @@ export const transactionTable = pgTable('transaction', {
 });
 
 export const transactionRelations = relations(transactionTable, ({ one }) => ({
-  account: one(accountTable, {
-    fields: [transactionTable.accountId],
-    references: [accountTable.id],
+  bank: one(bankTable, {
+    fields: [transactionTable.bankId],
+    references: [bankTable.id],
   }),
 }));
