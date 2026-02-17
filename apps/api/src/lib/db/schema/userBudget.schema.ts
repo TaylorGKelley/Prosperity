@@ -17,7 +17,7 @@ export const userBudgetTable = pgTable(
       })
       .notNull(),
   },
-  (table) => [primaryKey({ columns: [table.userId, table.budgetId] })]
+  (table) => [primaryKey({ columns: [table.userId, table.budgetId] })],
 );
 
 export const userBudgetRelations = relations(userBudgetTable, ({ one }) => ({

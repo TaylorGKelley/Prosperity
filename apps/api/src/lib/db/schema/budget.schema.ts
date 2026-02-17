@@ -25,6 +25,6 @@ export const budgetTable = pgTable(
 export const budgetRelations = relations(budgetTable, ({ many }) => ({
   categories: many(categoryTable),
   savingGoals: many(savingGoalTable),
-  accounts: many(accountTable),
+  banks: many(bankTable),
   userBudgets: many(userBudgetTable),
 }));

@@ -206,14 +206,14 @@ export const categoryTable = pgTable('category', {
     .default(
       iconEnum.enumValues[
         Math.floor(Math.random() * iconEnum.enumValues.length)
-      ]
+      ],
     ),
   color: colorEnum('color')
     .notNull()
     .default(
       colorEnum.enumValues[
         Math.floor(Math.random() * colorEnum.enumValues.length)
-      ]
+      ],
     ),
   startDate: date('start_date', { mode: 'date' }).notNull().defaultNow(),
   endDate: date('end_date', { mode: 'date' }),
