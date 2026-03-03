@@ -4,11 +4,12 @@ import { categoryTable, colorEnum } from './category.schema';
 import { savingGoalTable } from './savingGoal.schema';
 import { bankTable } from './bank.schema';
 import { userBudgetTable } from './userBudget.schema';
+import { type UUID } from 'node:crypto';
 
 export const budgetTable = pgTable(
   'budget',
   {
-    id: uuid('id').primaryKey().defaultRandom(),
+    id: uuid('id').$type<UUID>().primaryKey().defaultRandom(),
     name: varchar('name', { length: 256 }).notNull(),
     color: colorEnum('color')
       .notNull()

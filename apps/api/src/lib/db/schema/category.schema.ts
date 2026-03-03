@@ -8,6 +8,7 @@ import {
 } from 'drizzle-orm/pg-core';
 import { budgetTable } from './budget.schema';
 import { relations } from 'drizzle-orm';
+import { transactionTable } from './transaction.schema';
 
 export const iconEnum = pgEnum('icon', [
   'ALARM_CLOCK',
@@ -219,9 +220,10 @@ export const categoryTable = pgTable('category', {
   endDate: date('end_date', { mode: 'date' }),
 });
 
-export const categoryRelations = relations(categoryTable, ({ one }) => ({
+export const categoryRelations = relations(categoryTable, ({ one, many }) => ({
   budget: one(budgetTable, {
     fields: [categoryTable.budgetId],
     references: [budgetTable.id],
   }),
+  transactions: many(transactionTable),
 }));

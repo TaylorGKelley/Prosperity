@@ -11,6 +11,7 @@ import {
 import { categoryTable } from './category.schema';
 import { bankTable } from './bank.schema';
 import { relations } from 'drizzle-orm';
+import { type UUID } from 'node:crypto';
 
 export const transactionTypeEnum = pgEnum('transaction_type', [
   'CASH',
@@ -61,16 +62,19 @@ export type TransactionMetadata = {
 };
 
 export const transactionTable = pgTable('transaction', {
-  id: uuid('id').primaryKey().defaultRandom(),
+  id: uuid('id').$type<UUID>().primaryKey().defaultRandom(),
   tellerId: varchar('teller_id', { length: 256 }).unique().notNull(),
   bankId: uuid('bank_id')
+    .$type<UUID>()
     .references(() => bankTable.id, {
       onDelete: 'cascade',
     })
     .notNull(),
-  categoryId: uuid('category_id').references(() => categoryTable.id, {
-    onDelete: 'set null',
-  }),
+  categoryId: uuid('category_id')
+    .$type<UUID>()
+    .references(() => categoryTable.id, {
+      onDelete: 'set null',
+    }),
   amount: real('amount').notNull(),
   date: date('date', { mode: 'date' }).notNull().defaultNow(),
   description: text('description').notNull(),
@@ -83,5 +87,9 @@ export const transactionRelations = relations(transactionTable, ({ one }) => ({
   bank: one(bankTable, {
     fields: [transactionTable.bankId],
     references: [bankTable.id],
+  }),
+  category: one(categoryTable, {
+    fields: [transactionTable.categoryId],
+    references: [categoryTable.id],
   }),
 }));

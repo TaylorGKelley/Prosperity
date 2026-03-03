@@ -23,10 +23,10 @@ export class TransactionService {
     const result = await this.db.query.transactionTable.findMany({
       with: {
         bank: true,
+        category: true,
       },
     });
-    // const teller = await this.bankClient.accounts().transactions.list();
 
-    return result as unknown as Transaction[];
+    return result;
   }
 }

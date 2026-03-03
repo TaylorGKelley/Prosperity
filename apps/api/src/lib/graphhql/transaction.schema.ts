@@ -12,9 +12,6 @@ export class Transaction {
   @Field(() => String)
   tellerId: string;
 
-  @Field(() => String)
-  name: string;
-
   @Field(() => Float)
   amount: number;
 
@@ -36,6 +33,7 @@ export class Transaction {
 
   @Field(() => Category)
   category: Category;
+  categoryId: UUID;
 }
 
 export class PaginatedTransactions extends Paginated(Transaction) {}
