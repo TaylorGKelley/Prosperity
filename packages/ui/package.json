@@ -6,10 +6,7 @@
   "exports": {
     "./globals.css": "./src/globals.css",
     "./lib/*": "./src/lib/*.ts",
-    ".": [
-      "./src/components/*.tsx",
-      "./src/components/ui/*.tsx"
-    ]
+    "./*": "./src/components/ui/*.tsx"
   },
   "packageManager": "pnpm@10.28.0",
   "dependencies": {
