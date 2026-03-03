@@ -5,7 +5,7 @@ import { BankStatus, BankSubtype, BankType } from './enums/bank.enums';
 import { Budget } from './budget.schema';
 
 @ObjectType()
-export default class Bank {
+export class Bank {
   @Field(() => ID)
   id: UUID;
 

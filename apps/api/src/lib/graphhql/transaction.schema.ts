@@ -1,6 +1,6 @@
 import { Field, Float, ID, ObjectType } from '@nestjs/graphql';
 import { Paginated } from './utils.schema';
-import Bank from './bank.schema';
+import { Bank } from './bank.schema';
 import { type UUID } from 'node:crypto';
 import { Category } from './category.schema';
 
