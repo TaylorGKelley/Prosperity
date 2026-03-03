@@ -1,9 +1,16 @@
 import { Field, Float, ID, ObjectType } from '@nestjs/graphql';
+import { Paginated } from './utils.schema';
+import Account from './account.schema';
+import { type UUID } from 'node:crypto';
+import { Category } from './category.schema';
 
 @ObjectType()
 export class Transaction {
   @Field(() => ID)
-  id: string;
+  id: UUID;
+
+  @Field(() => String)
+  tellerId: string;
 
   @Field(() => String)
   name: string;
@@ -22,4 +29,13 @@ export class Transaction {
 
   @Field(() => String)
   type: string;
+
+  @Field(() => Account)
+  account: Account;
+  accountId: UUID;
+
+  @Field(() => Category)
+  category: Category;
 }
+
+export class PaginatedTransactions extends Paginated(Transaction) {}

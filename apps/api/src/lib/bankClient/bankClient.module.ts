@@ -39,3 +39,4 @@ export const BANK_CLIENT = Symbol.for('BANK_CLIENT');
   exports: [BANK_CLIENT],
 })
 export class BankClientModule {}
+export type BankClient = InstanceType<typeof TellerClient>;

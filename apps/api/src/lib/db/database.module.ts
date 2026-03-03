@@ -1,11 +1,15 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Pool } from 'pg';
-import { drizzle } from 'drizzle-orm/node-postgres';
+import { drizzle, NodePgDatabase } from 'drizzle-orm/node-postgres';
 import * as authSchema from '../auth/schema';
 import * as appSchema from './schema/schema';
 
 export const DATABASE_CONNECTION = Symbol.for('DATABASE_CONNECTION');
+const schema = {
+  ...authSchema,
+  ...appSchema,
+};
 
 @Module({
   imports: [ConfigModule],
@@ -18,10 +22,7 @@ export const DATABASE_CONNECTION = Symbol.for('DATABASE_CONNECTION');
         });
 
         return drizzle(pool, {
-          schema: {
-            ...authSchema,
-            ...appSchema,
-          },
+          schema,
         });
       },
       inject: [ConfigService],
@@ -30,3 +31,5 @@ export const DATABASE_CONNECTION = Symbol.for('DATABASE_CONNECTION');
   exports: [DATABASE_CONNECTION],
 })
 export default class DatabaseModule {}
+
+export type DatabaseClient = NodePgDatabase<typeof schema>;

@@ -15,15 +15,15 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   // BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+} from "@repo/ui/breadcrumbs";
+import { Card, CardContent, CardHeader, CardTitle } from "@repo/ui/card";
 
-import { Separator } from "@/components/ui/separator";
-import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Separator } from "@repo/ui/separator";
+import { SidebarTrigger } from "@repo/ui/sidebar";
 import RefreshTransactionsButton from "@/components/forms/RefreshTransactionsButton";
 import { cn } from "@repo/ui/lib/utils";
 import Link from "next/link";
-import { Button } from "@repo/ui";
+import { Button } from "@repo/ui/button";
 
 export default async function Home() {
   const graphClient = await createGraphClient();
@@ -78,7 +78,7 @@ export default async function Home() {
               <Link href="/transactions">See All</Link>
             </div>
             <div className="grid">
-              {data.transactions.items.map((transaction, i) => (
+              {data?.transactions.items.map((transaction, i) => (
                 <div
                   key={transaction.id}
                   className={cn({

@@ -1,31 +1,15 @@
-import 'server-only';
+import "server-only";
 
-import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client';
-import { setContext } from '@apollo/client/link/context';
-import { getToken, isExpiredToken, refreshTokens } from 'authentication-service-nextjs-sdk/server';
+import { ApolloClient, InMemoryCache } from "@apollo/client";
+import { HttpLink } from "@apollo/client";
 
-const httpLink = createHttpLink({
-	uri: process.env.BACKEND_API_BASE_URL,
+const httpLink = new HttpLink({
+  uri: `${process.env.API_URL}/graphql`,
 });
 
-export const createGraphClient = async (config?: { isInServerAction?: boolean }) => {
-	const authLink = setContext(async (_, { headers }) => {
-		let accessToken = await getToken('accessToken');
-
-		if (config?.isInServerAction && (!accessToken || isExpiredToken(accessToken))) {
-			({ accessToken } = await refreshTokens());
-		}
-
-		return {
-			headers: {
-				...headers,
-				authorization: accessToken ? `Bearer ${accessToken}` : '',
-			},
-		};
-	});
-
-	return new ApolloClient({
-		link: authLink.concat(httpLink),
-		cache: new InMemoryCache(),
-	});
+export const createGraphClient = async () => {
+  return new ApolloClient({
+    link: httpLink,
+    cache: new InMemoryCache(),
+  });
 };

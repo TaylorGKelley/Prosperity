@@ -7,7 +7,7 @@ export class TransactionResolver {
   constructor(private readonly transactionService: TransactionService) {}
 
   @Query(() => [Transaction])
-  public async getTransactions() {
-    return this.transactionService.getTransactions();
+  public async transactions() {
+    return this.transactionService.getAll();
   }
 }

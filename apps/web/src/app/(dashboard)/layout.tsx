@@ -1,15 +1,15 @@
-import { AppSidebar } from '@/components/AppSidebar';
-import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
+import { AppSidebar } from "@/components/AppSidebar";
+import { SidebarInset, SidebarProvider } from "@repo/ui/sidebar";
 
 export default async function DashboardLayout({
-	children,
+  children,
 }: Readonly<{
-	children: React.ReactNode;
+  children: React.ReactNode;
 }>) {
-	return (
-		<SidebarProvider>
-			<AppSidebar />
-			<SidebarInset>{children}</SidebarInset>
-		</SidebarProvider>
-	);
+  return (
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset>{children}</SidebarInset>
+    </SidebarProvider>
+  );
 }
