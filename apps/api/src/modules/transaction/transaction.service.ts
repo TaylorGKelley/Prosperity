@@ -20,7 +20,11 @@ export class TransactionService {
   ) {}
 
   public async getAll(): Promise<Transaction[]> {
-    const result = await this.db.query.transactionTable.findMany();
+    const result = await this.db.query.transactionTable.findMany({
+      with: {
+        bank: true,
+      },
+    });
     // const teller = await this.bankClient.accounts().transactions.list();
 
     return result as unknown as Transaction[];

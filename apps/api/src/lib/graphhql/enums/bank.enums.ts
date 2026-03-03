@@ -1,14 +1,14 @@
 import { registerEnumType } from '@nestjs/graphql';
 
-export const AccountType = {
+export const BankType = {
   DEPOSITIORY: 'DEPOSITORY',
   CREDIT: 'CREDIT',
 };
-registerEnumType(AccountType, {
-  name: 'AccountType',
+registerEnumType(BankType, {
+  name: 'BankType',
 });
 
-export const AccountSubtype = {
+export const BankSubtype = {
   CREDIT: 'CREDIT',
   CHECKING: 'CHECKING',
   SAVINGS: 'SAVINGS',
@@ -17,14 +17,14 @@ export const AccountSubtype = {
   TREASURY: 'TREASURY',
   SWEEP: 'SWEEP',
 };
-registerEnumType(AccountSubtype, {
-  name: 'AccountSubtype',
+registerEnumType(BankSubtype, {
+  name: 'BankSubtype',
 });
 
-export const AccountStatus = {
+export const BankStatus = {
   OPEN: 'OPEN',
   CLOSED: 'CLOSED',
 };
-registerEnumType(AccountStatus, {
-  name: 'AccountStatus',
+registerEnumType(BankStatus, {
+  name: 'BankStatus',
 });

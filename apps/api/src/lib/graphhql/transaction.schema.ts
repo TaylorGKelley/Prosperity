@@ -1,6 +1,6 @@
 import { Field, Float, ID, ObjectType } from '@nestjs/graphql';
 import { Paginated } from './utils.schema';
-import Account from './account.schema';
+import Bank from './bank.schema';
 import { type UUID } from 'node:crypto';
 import { Category } from './category.schema';
 
@@ -30,9 +30,9 @@ export class Transaction {
   @Field(() => String)
   type: string;
 
-  @Field(() => Account)
-  account: Account;
-  accountId: UUID;
+  @Field(() => Bank)
+  bank: Bank;
+  bankId: UUID;
 
   @Field(() => Category)
   category: Category;

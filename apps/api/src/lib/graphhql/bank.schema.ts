@@ -1,15 +1,11 @@
-import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
+import { Field, Float, ID, Int, ObjectType } from '@nestjs/graphql';
 import { type UUID } from 'node:crypto';
 import { Color } from './enums/category.enums';
-import {
-  AccountStatus,
-  AccountSubtype,
-  AccountType,
-} from './enums/account.enums';
+import { BankStatus, BankSubtype, BankType } from './enums/bank.enums';
 import { Budget } from './budget.schema';
 
 @ObjectType()
-export default class Account {
+export default class Bank {
   @Field(() => ID)
   id: UUID;
 
@@ -37,14 +33,14 @@ export default class Account {
   @Field(() => Color)
   color: (typeof Color)[keyof typeof Color];
 
-  @Field(() => AccountType)
-  type: (typeof AccountType)[keyof typeof AccountType];
+  @Field(() => BankType)
+  type: (typeof BankType)[keyof typeof BankType];
 
-  @Field(() => AccountSubtype)
-  subtype: (typeof AccountSubtype)[keyof typeof AccountSubtype];
+  @Field(() => BankSubtype)
+  subtype: (typeof BankSubtype)[keyof typeof BankSubtype];
 
-  @Field(() => AccountStatus)
-  status: (typeof AccountStatus)[keyof typeof AccountStatus];
+  @Field(() => BankStatus)
+  status: (typeof BankStatus)[keyof typeof BankStatus];
 
   @Field(() => Budget)
   budget: Budget;

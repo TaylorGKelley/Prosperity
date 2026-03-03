@@ -1,4 +1,4 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Color } from './enums/category.enums';
 import { type UUID } from 'node:crypto';
 
