@@ -1,4 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { AuthService } from '@thallesp/nestjs-better-auth';
+import { SQL } from 'drizzle-orm';
 import {
   and,
   asc,
@@ -10,7 +12,7 @@ import {
   lte,
   or,
 } from 'drizzle-orm';
-import { UUID } from 'node:crypto';
+import { auth } from 'src/lib/auth/auth';
 import {
   BANK_CLIENT,
   type BankClient,
@@ -26,26 +28,53 @@ import {
   transactionTable,
   userBudgetTable,
 } from 'src/lib/db/schema/schema';
+import { Color, Icon } from 'src/lib/graphhql/enums/category.enums';
+import { TransactionSyncStatus } from 'src/lib/graphhql/enums/transaction.enums';
 import { Transaction } from 'src/lib/graphhql/transaction.schema';
 import Cursor from 'src/utils/cursor.util';
 import { decrypt } from 'src/utils/encryption.util';
 
 @Injectable()
 export class TransactionService {
+  private readonly _transactionColumns = {
+    ...getTableColumns(transactionTable),
+    bank: {
+      ...getTableColumns(bankTable),
+    },
+    category: {
+      ...getTableColumns(categoryTable),
+    },
+  };
+
   constructor(
     @Inject(DATABASE_CONNECTION)
     private db: DatabaseClient,
 
     @Inject(BANK_CLIENT)
     private bankClient: BankClient,
+
+    private authService: AuthService<typeof auth>,
   ) {}
 
-  public async getAll({ monthDate, budgetId, pagination }) {
-    let cursorFilter = undefined;
+  public async getAll({
+    monthDate,
+    budgetId,
+    pagination,
+  }: {
+    monthDate: Date;
+    budgetId: string;
+    pagination: { cursor: string; count: number };
+  }) {
+    const session = await this.authService.api.getSession();
+
+    let cursorFilter: SQL | undefined = undefined;
 
     // Set the filter for pagination if it's part of the request
     if (pagination?.cursor) {
-      const { date, id } = Cursor.decode(pagination.cursor);
+      const { date, id } = Cursor.decode(pagination.cursor) as {
+        date: string;
+        id: string;
+      };
       const filterDate = new Date(date);
 
       cursorFilter = or(
@@ -73,7 +102,7 @@ export class TransactionService {
       .innerJoin(budgetTable, eq(budgetTable.id, userBudgetTable.budgetId))
       .where(
         and(
-          eq(userBudgetTable.userId, this._userId),
+          eq(userBudgetTable.userId, session!.user.id),
           budgetId
             ? eq(budgetTable.id, budgetId)
             : eq(budgetTable.isDefault, true),
@@ -124,71 +153,36 @@ export class TransactionService {
     return {
       items: await Promise.all(
         items.map(async (item) => {
-          const accountInfo = await new TellerClient(
-            decrypt(item.account.accessToken, item.account.accessTokenIV),
-          ).getAccount(item.account.tellerId);
+          const bankInfo = (
+            await this.bankClient(
+              decrypt(item.bank.accessToken, item.bank.accessTokenIV),
+            ).accounts.get(item.bank.tellerId)
+          ).data;
 
           return {
             ...item,
-            account: {
+            bank: {
               id: item.id,
-              currency: accountInfo.currency,
-              enrollmentId: accountInfo.enrollment_id,
-              institution: accountInfo.institution,
-              lastFour: parseInt(accountInfo.last_four),
-              name: accountInfo.name,
-              color:
-                ColorEnum[
-                  snakeToPascalCase(
-                    item.account.color,
-                  ) as keyof typeof ColorEnum
-                ],
-              type: AccountTypeEnum[
-                snakeToPascalCase(
-                  accountInfo.type,
-                ) as keyof typeof AccountTypeEnum
-              ],
-              subtype:
-                AccountSubtypeEnum[
-                  snakeToPascalCase(
-                    accountInfo.subtype,
-                  ) as keyof typeof AccountSubtypeEnum
-                ],
-              status:
-                AccountStatusEnum[
-                  snakeToPascalCase(
-                    accountInfo.status,
-                  ) as keyof typeof AccountStatusEnum
-                ],
+              tellerId: item.bank.tellerId,
+              currency: bankInfo.currency,
+              enrollmentId: bankInfo.enrollment_id,
+              institution: bankInfo.institution,
+              lastFour: parseInt(bankInfo.last_four),
+              name: bankInfo.name,
+              color: item.bank.color,
+              type: bankInfo.type,
+              subtype: bankInfo.subtype,
+              status: bankInfo.status,
             },
             category: item.category
-              ? {
-                  ...item.category,
-                  color:
-                    ColorEnum[
-                      snakeToPascalCase(
-                        item.category.color,
-                      ) as keyof typeof ColorEnum
-                    ],
-                  icon: IconEnum[
-                    snakeToPascalCase(
-                      item.category.icon,
-                    ) as keyof typeof IconEnum
-                  ],
-                }
+              ? item.category
               : {
-                  id: '00000000-0000-0000-0000-000000000000' as UUID,
+                  id: '00000000-0000-0000-0000-000000000000',
                   name: 'Other',
-                  icon: IconEnum.Ellipsis,
-                  color: ColorEnum.Blue,
+                  icon: Icon.ELLIPSIS,
+                  color: Color.BLUE,
                 },
-            status:
-              TransactionStatusEnum[
-                snakeToPascalCase(
-                  item.status,
-                ) as keyof typeof TransactionStatusEnum
-              ],
-          } as Transaction;
+          };
         }),
       ),
       pageInfo: pagination && {
@@ -199,7 +193,9 @@ export class TransactionService {
     };
   }
 
-  public async get({ id }) {
+  public async get({ id }: { id: string }) {
+    const session = await this.authService.api.getSession();
+
     const result = (
       await this.db
         .select({
@@ -214,69 +210,44 @@ export class TransactionService {
         )
         .innerJoin(
           userBudgetTable,
-          eq(userBudgetTable.budgetId, accountTable.budgetId),
+          eq(userBudgetTable.budgetId, bankTable.budgetId),
         )
         .where(
           and(
-            eq(userBudgetTable.userId, this._userId),
+            eq(userBudgetTable.userId, session!.user.id),
             eq(transactionTable.id, id),
           ),
         )
     )?.[0];
 
-    const accountInfo = await new TellerClient(
-      decrypt(result.account.accessToken, result.account.accessTokenIV),
-    ).getAccount(result.account.tellerId);
+    const bankInfo = (
+      await this.bankClient(
+        decrypt(result.bank.accessToken, result.bank.accessTokenIV),
+      ).accounts.get(result.bank.tellerId)
+    ).data;
 
     return {
       ...result,
       account: {
         id: result.id,
-        currency: accountInfo.currency,
-        enrollmentId: accountInfo.enrollment_id,
-        institution: accountInfo.institution,
-        lastFour: parseInt(accountInfo.last_four),
-        name: accountInfo.name,
-        color:
-          ColorEnum[
-            snakeToPascalCase(result.account.color) as keyof typeof ColorEnum
-          ],
-
-        type: AccountTypeEnum[
-          snakeToPascalCase(accountInfo.type) as keyof typeof AccountTypeEnum
-        ],
-        subtype:
-          AccountSubtypeEnum[
-            snakeToPascalCase(
-              accountInfo.subtype,
-            ) as keyof typeof AccountSubtypeEnum
-          ],
-        status:
-          AccountStatusEnum[
-            snakeToPascalCase(
-              accountInfo.status,
-            ) as keyof typeof AccountStatusEnum
-          ],
+        currency: bankInfo.currency,
+        enrollmentId: bankInfo.enrollment_id,
+        institution: bankInfo.institution,
+        lastFour: parseInt(bankInfo.last_four),
+        name: bankInfo.name,
+        color: result.bank.color,
+        type: bankInfo.type,
+        subtype: bankInfo.subtype,
+        status: bankInfo.status,
       },
-      category: result.category && {
-        ...result.category,
-        color:
-          ColorEnum[
-            snakeToPascalCase(result.category.color) as keyof typeof ColorEnum
-          ],
-        icon: IconEnum[
-          snakeToPascalCase(result.category.icon) as keyof typeof IconEnum
-        ],
-      },
-      status:
-        TransactionStatusEnum[
-          snakeToPascalCase(result.status) as keyof typeof TransactionStatusEnum
-        ],
+      category: result.category,
     };
   }
 
   public async sync() {
     try {
+      const session = await this.authService.api.getSession();
+
       const accounts = await this.db
         .select(getTableColumns(bankTable))
         .from(bankTable)
@@ -284,7 +255,7 @@ export class TransactionService {
           userBudgetTable,
           eq(userBudgetTable.budgetId, bankTable.budgetId),
         )
-        .where(eq(userBudgetTable.userId, this._userId));
+        .where(eq(userBudgetTable.userId, session!.user.id));
 
       await this.db.transaction(async (tw) => {
         try {
@@ -302,7 +273,7 @@ export class TransactionService {
               await tw
                 .select()
                 .from(transactionTable)
-                .where(eq(transactionTable.accountId, account.id))
+                .where(eq(transactionTable.bankId, account.id))
                 .orderBy(asc(transactionTable.date), asc(transactionTable.id))
                 .limit(1)
             )[0];
@@ -312,31 +283,29 @@ export class TransactionService {
               account.accessTokenIV,
             );
 
-            const accountTransactions = await this.bankClient
-              .accounts(account.tellerId)
-              .transactions.list(
-                accessToken,
-                lastTransaction?.tellerId
-                  ? {
-                      from_id: lastTransaction.tellerId,
-                    }
-                  : undefined,
-              );
+            const accountTransactions = (
+              await this.bankClient(accessToken)
+                .accounts(account.tellerId)
+                .transactions.list(
+                  lastTransaction?.tellerId
+                    ? {
+                        from_id: lastTransaction.tellerId,
+                      }
+                    : undefined,
+                )
+            ).data;
 
             accountTransactions.forEach((transaction) =>
               transactions.push({
                 tellerId: transaction.id,
-                accountId: account.id,
+                bankId: account.id,
                 categoryId: null, // user can set it later
                 amount: parseFloat(transaction.amount),
                 date: new Date(transaction.date),
                 description: transaction.description,
-                status:
-                  TransactionStatusEnum[
-                    snakeToPascalCase(
-                      transaction.status,
-                    ) as keyof typeof TransactionStatusEnum
-                  ],
+                status: transaction.status.toUpperCase() as
+                  | 'POSTED'
+                  | 'PENDING',
                 type: transaction.type,
                 metadata: {
                   category: transaction.details.category,
@@ -375,11 +344,11 @@ export class TransactionService {
       });
 
       return {
-        status: TransactionSyncStatusEnum.Success,
+        status: TransactionSyncStatus.SUCCESS,
       };
     } catch (error) {
       return {
-        status: TransactionSyncStatusEnum.Error,
+        status: TransactionSyncStatus.ERROR,
         error: (error as Error).message,
       };
     }
@@ -422,7 +391,7 @@ export class TransactionService {
   // 	return result;
   // }
 
-  public async delete({ id }): Promise<UUID> {
+  public async delete({ id }: { id: string }) {
     const result = (
       await this.db
         .delete(transactionTable)
@@ -430,6 +399,6 @@ export class TransactionService {
         .returning({ id: transactionTable.id })
     )[0];
 
-    return result.id as UUID;
+    return result.id;
   }
 }

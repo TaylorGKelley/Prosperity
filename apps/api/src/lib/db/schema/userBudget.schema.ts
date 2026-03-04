@@ -8,13 +8,11 @@ export const userBudgetTable = pgTable(
   'user_budget',
   {
     userId: uuid('user_id')
-      .$type<UUID>()
       .references(() => user.id, {
         onDelete: 'cascade',
       })
       .notNull(),
     budgetId: uuid('budget_id')
-      .$type<UUID>()
       .references(() => budgetTable.id, {
         onDelete: 'cascade',
       })

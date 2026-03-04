@@ -153,7 +153,7 @@ export const Icon = {
   WHEAT: 'WHEAT',
   WRENCH: 'WRENCH',
   WALLET: 'WALLET',
-};
+} as const;
 registerEnumType(Icon, {
   name: 'Icon',
 });
@@ -178,7 +178,7 @@ export const Color = {
   YELLOW: 'YELLOW',
   EMERALD: 'EMERALD',
   FUSCHIA: 'FUSCHIA',
-};
+} as const;
 registerEnumType(Color, {
   name: 'Color',
 });

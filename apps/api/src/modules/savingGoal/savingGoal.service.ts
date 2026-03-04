@@ -1,6 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { eq, and } from 'drizzle-orm';
-import { type UUID } from 'node:crypto';
+import { AuthService } from '@thallesp/nestjs-better-auth';
+import { eq, and, getTableColumns } from 'drizzle-orm';
+
+import { auth } from 'src/lib/auth/auth';
 import {
   DATABASE_CONNECTION,
   type DatabaseClient,
@@ -10,18 +12,29 @@ import {
   savingGoalTable,
   userBudgetTable,
 } from 'src/lib/db/schema/schema';
+import {
+  CreateSavingGoalInput,
+  UpdateSavingGoalInput,
+} from 'src/lib/graphhql/inputs/savingGoal.inputs';
 import { SavingGoal } from 'src/lib/graphhql/savingGoal.schema';
 
 @Injectable()
 export class SavingGoalService {
+  private readonly _savingGoalColumns = {
+    ...getTableColumns(savingGoalTable),
+    budget: { ...getTableColumns(budgetTable) },
+  };
+
   constructor(
     @Inject(DATABASE_CONNECTION)
-    private db: DatabaseClient,
+    private readonly db: DatabaseClient,
+
+    private readonly authService: AuthService<typeof auth>,
   ) {}
 
-  public async getAll({
-    budgetId,
-  }: QuerySavingGoalsArgs): Promise<SavingGoal[]> {
+  public async getAll({ budgetId }: { budgetId: string }) {
+    const session = await this.authService.api.getSession();
+
     const results = await this.db
       .select(this._savingGoalColumns)
       .from(savingGoalTable)
@@ -29,29 +42,19 @@ export class SavingGoalService {
       .innerJoin(userBudgetTable, eq(userBudgetTable.budgetId, budgetTable.id))
       .where(
         and(
-          eq(userBudgetTable.userId, this._userId),
+          eq(userBudgetTable.userId, session!.user.id),
           budgetId
             ? eq(budgetTable.id, budgetId)
             : eq(budgetTable.isDefault, true),
         ),
       );
 
-    return results.map(
-      (result) =>
-        ({
-          ...result,
-          color:
-            ColorEnum[
-              snakeToPascalCase(result.color) as keyof typeof ColorEnum
-            ],
-          icon: IconEnum[
-            snakeToPascalCase(result.icon) as keyof typeof IconEnum
-          ],
-        }) as SavingGoal,
-    );
+    return results;
   }
 
-  public async get({ id }) {
+  public async get({ id }: { id: string }) {
+    const session = await this.authService.api.getSession();
+
     const result = (
       await this.db
         .select(this._savingGoalColumns)
@@ -64,23 +67,15 @@ export class SavingGoalService {
         .where(
           and(
             eq(savingGoalTable.id, id),
-            eq(userBudgetTable.userId, this._userId),
+            eq(userBudgetTable.userId, session!.user.id),
           ),
         )
     )[0];
 
-    return (
-      result &&
-      ({
-        ...result,
-        color:
-          ColorEnum[snakeToPascalCase(result.color) as keyof typeof ColorEnum],
-        icon: IconEnum[snakeToPascalCase(result.icon) as keyof typeof IconEnum],
-      } as SavingGoal)
-    );
+    return result;
   }
 
-  public async create({ input }) {
+  public async create({ input }: { input: CreateSavingGoalInput }) {
     const result = (
       await this.db
         .insert(savingGoalTable)
@@ -97,7 +92,7 @@ export class SavingGoalService {
     )[0] as SavingGoal;
   }
 
-  public async update({ input }) {
+  public async update({ input }: { input: UpdateSavingGoalInput }) {
     const result = (
       await this.db
         .update(savingGoalTable)
@@ -120,7 +115,7 @@ export class SavingGoalService {
     )[0] as SavingGoal;
   }
 
-  public async delete({ id }): Promise<UUID> {
+  public async delete({ id }: { id: string }) {
     const result = (
       await this.db
         .delete(savingGoalTable)
@@ -128,6 +123,6 @@ export class SavingGoalService {
         .returning({ id: savingGoalTable.id })
     )[0];
 
-    return result.id as UUID;
+    return result.id;
   }
 }

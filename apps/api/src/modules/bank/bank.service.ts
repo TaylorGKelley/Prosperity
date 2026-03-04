@@ -1,5 +1,12 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { and, eq } from 'drizzle-orm';
+import { Inject, Injectable, Scope } from '@nestjs/common';
+import { AuthService } from '@thallesp/nestjs-better-auth';
+import { UUID } from 'crypto';
+import { and, eq, getTableColumns } from 'drizzle-orm';
+import { auth } from 'src/lib/auth/auth';
+import {
+  BANK_CLIENT,
+  type BankClient,
+} from 'src/lib/bankClient/bankClient.module';
 import {
   DATABASE_CONNECTION,
   type DatabaseClient,
@@ -10,16 +17,27 @@ import {
   userBudgetTable,
 } from 'src/lib/db/schema/schema';
 import { Bank } from 'src/lib/graphhql/bank.schema';
-import { decrypt } from 'src/utils/encryption.util';
+import { CreateAccountInput } from 'src/lib/graphhql/inputs/bank.inputs';
+import { decrypt, encrypt } from 'src/utils/encryption.util';
 
-@Injectable()
+@Injectable({ scope: Scope.REQUEST })
 export class BankService {
+  private _bankColumns = {
+    ...getTableColumns(bankTable),
+    budget: { ...getTableColumns(budgetTable) },
+  };
+
   constructor(
     @Inject(DATABASE_CONNECTION)
-    private db: DatabaseClient,
+    private readonly db: DatabaseClient,
+    @Inject(BANK_CLIENT)
+    private readonly bankClient: BankClient,
+    private readonly authService: AuthService<typeof auth>,
   ) {}
 
-  public async getAll({ budgetId }) {
+  public async getAll({ budgetId }: { budgetId: string }) {
+    const session = await this.authService.api.getSession();
+
     const bankRecords = await this.db
       .select(this._bankColumns)
       .from(bankTable)
@@ -27,7 +45,7 @@ export class BankService {
       .innerJoin(userBudgetTable, eq(userBudgetTable.budgetId, budgetTable.id))
       .where(
         and(
-          eq(userBudgetTable.userId, this._userId),
+          eq(userBudgetTable.userId, session?.user.id),
           budgetId
             ? eq(budgetTable.id, budgetId)
             : eq(budgetTable.isDefault, true),
@@ -41,48 +59,40 @@ export class BankService {
         bankRecord.accessTokenIV,
       );
 
-      const tellerClient = new TellerClient(accessToken);
-      const bankInfo = await tellerClient.getBank(bankRecord.tellerId);
-      const balance = await tellerClient.getBalances(bankInfo.id);
+      const bankInfo = (
+        await this.bankClient(accessToken).accounts.get(bankRecord.tellerId)
+      )?.data;
+      const balance = (
+        await this.bankClient(accessToken)
+          .accounts(bankRecord.tellerId)
+          .balances.get()
+      )?.data;
 
       result.push({
         id: bankRecord.id,
+        tellerId: bankRecord.tellerId,
         budget: {
           ...bankRecord.budget,
-          color:
-            ColorEnum[
-              snakeToPascalCase(
-                bankRecord.budget.color,
-              ) as keyof typeof ColorEnum
-            ],
         },
+        budgetId: bankRecord.budgetId,
         balance: balance.available ? parseFloat(balance.available) : 0,
-        currency: bankInfo.currency,
-        enrollmentId: bankInfo.enrollment_id,
-        institution: bankInfo.institution,
-        lastFour: parseInt(bankInfo.last_four),
-        name: bankInfo.name,
-        color:
-          ColorEnum[
-            snakeToPascalCase(bankRecord.color) as keyof typeof ColorEnum
-          ],
-        type: BankTypeEnum[
-          snakeToPascalCase(bankInfo.type) as keyof typeof BankTypeEnum
-        ],
-        subtype:
-          BankSubtypeEnum[
-            snakeToPascalCase(bankInfo.subtype) as keyof typeof BankSubtypeEnum
-          ],
-        status:
-          BankStatusEnum[
-            snakeToPascalCase(bankInfo.status) as keyof typeof BankStatusEnum
-          ],
+        currency: bankInfo?.currency,
+        enrollmentId: bankInfo?.enrollment_id,
+        institution: bankInfo?.institution,
+        lastFour: parseInt(bankInfo?.last_four),
+        name: bankInfo?.name,
+        color: bankRecord.color,
+        type: bankInfo?.type,
+        subtype: bankInfo?.subtype,
+        status: bankInfo?.status,
       });
     }
 
     return result;
   }
-  public async get({ id }) {
+  public async get({ id }: { id: string }) {
+    const session = await this.authService.api.getSession();
+
     const result = (
       await this.db
         .select(this._bankColumns)
@@ -93,24 +103,28 @@ export class BankService {
           eq(userBudgetTable.budgetId, budgetTable.id),
         )
         .where(
-          and(eq(bankTable.id, id), eq(userBudgetTable.userId, this._userId)),
+          and(
+            eq(bankTable.id, id),
+            eq(userBudgetTable.userId, session?.user.id),
+          ),
         )
     )[0];
 
     const accessToken = decrypt(result.accessToken, result.accessTokenIV);
 
-    const tellerClient = new TellerClient(accessToken);
-    const bankInfo = await tellerClient.getBank(result.tellerId);
-    const balance = await tellerClient.getBalances(bankInfo.id);
+    const bankInfo = (
+      await this.bankClient(accessToken).accounts.get(result.tellerId)
+    ).data;
+    const balance = (
+      await this.bankClient(accessToken)
+        .accounts(result.tellerId)
+        .balances.get()
+    ).data;
 
     return {
       id: result.id,
       budget: {
         ...result.budget,
-        color:
-          ColorEnum[
-            snakeToPascalCase(result.budget.color) as keyof typeof ColorEnum
-          ],
       },
       balance: balance.available ? parseFloat(balance.available) : 0,
       currency: bankInfo.currency,
@@ -118,23 +132,16 @@ export class BankService {
       institution: bankInfo.institution,
       lastFour: parseInt(bankInfo.last_four),
       name: bankInfo.name,
-      color:
-        ColorEnum[snakeToPascalCase(result.color) as keyof typeof ColorEnum],
-      type: BankTypeEnum[
-        snakeToPascalCase(bankInfo.type) as keyof typeof BankTypeEnum
-      ],
-      subtype:
-        BankSubtypeEnum[
-          snakeToPascalCase(bankInfo.subtype) as keyof typeof BankSubtypeEnum
-        ],
-      status:
-        BankStatusEnum[
-          snakeToPascalCase(bankInfo.status) as keyof typeof BankStatusEnum
-        ],
+      color: result.color,
+      type: bankInfo.type,
+      subtype: bankInfo.subtype,
+      status: bankInfo.status,
     };
   }
 
-  public async create({ input }) {
+  public async create({ input }: { input: CreateAccountInput }) {
+    const session = await this.authService.api.getSession();
+
     const { iv: accessTokenIV, encryptedToken: accessToken } = encrypt(
       input.accessToken,
     );
@@ -147,11 +154,11 @@ export class BankService {
           userBudgetTable,
           eq(userBudgetTable.budgetId, budgetTable.id),
         )
-        .where(eq(userBudgetTable.userId, this._userId))
+        .where(eq(userBudgetTable.userId, session?.user.id))
     )[0];
 
-    const tellerClient = new TellerClient(input.accessToken);
-    const banks = await tellerClient.getBanks();
+    const banks = (await this.bankClient(input.accessToken).accounts.list())
+      .data;
 
     try {
       const results = await this.db
@@ -173,16 +180,16 @@ export class BankService {
       return await Promise.all(
         results.map(async (result) => {
           const bankInfo = banks.find((bank) => bank.id == result.tellerId)!;
-          const balance = await tellerClient.getBalances(bankInfo.id);
+          const balance = (
+            await this.bankClient(input.accessToken)
+              .accounts(bankInfo.id)
+              .balances.get()
+          ).data;
 
           return {
             id: result.id,
             budget: {
               ...budget,
-              color:
-                ColorEnum[
-                  snakeToPascalCase(budget.color) as keyof typeof ColorEnum
-                ],
             },
             balance: balance.available ? parseFloat(balance.available) : 0,
             currency: bankInfo.currency,
@@ -190,25 +197,10 @@ export class BankService {
             institution: bankInfo.institution,
             lastFour: parseInt(bankInfo.last_four),
             name: bankInfo.name,
-            color:
-              ColorEnum[
-                snakeToPascalCase(result.color) as keyof typeof ColorEnum
-              ],
-            type: BankTypeEnum[
-              snakeToPascalCase(bankInfo.type) as keyof typeof BankTypeEnum
-            ],
-            subtype:
-              BankSubtypeEnum[
-                snakeToPascalCase(
-                  bankInfo.subtype,
-                ) as keyof typeof BankSubtypeEnum
-              ],
-            status:
-              BankStatusEnum[
-                snakeToPascalCase(
-                  bankInfo.status,
-                ) as keyof typeof BankStatusEnum
-              ],
+            color: result.color,
+            type: bankInfo.type,
+            subtype: bankInfo.subtype,
+            status: bankInfo.status,
           };
         }),
       );
@@ -217,7 +209,7 @@ export class BankService {
     }
   }
 
-  public async delete({ id }) {
+  public async delete({ id }: { id: string }) {
     let result: typeof bankTable.$inferSelect;
 
     await this.db.transaction(async (tx) => {
@@ -233,7 +225,7 @@ export class BankService {
 
         const accessToken = decrypt(result.accessToken, result.accessTokenIV);
 
-        await new TellerClient(accessToken).deleteBank(id);
+        await this.bankClient(accessToken).accounts.delete(id);
       } catch {
         tx.rollback();
       }

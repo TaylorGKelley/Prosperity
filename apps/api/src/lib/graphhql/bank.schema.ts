@@ -1,5 +1,5 @@
 import { Field, Float, ID, Int, ObjectType } from '@nestjs/graphql';
-import { type UUID } from 'node:crypto';
+
 import { Color } from './enums/category.enums';
 import { BankStatus, BankSubtype, BankType } from './enums/bank.enums';
 import { Budget } from './budget.schema';
@@ -7,7 +7,7 @@ import { Budget } from './budget.schema';
 @ObjectType()
 export class Bank {
   @Field(() => ID)
-  id: UUID;
+  id: string;
 
   @Field(() => String)
   tellerId: string;
@@ -44,7 +44,7 @@ export class Bank {
 
   @Field(() => Budget)
   budget: Budget;
-  budgetId: UUID;
+  budgetId: string;
 }
 
 @ObjectType()

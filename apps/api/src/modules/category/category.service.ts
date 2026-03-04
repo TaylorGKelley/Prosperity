@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { AuthService } from '@thallesp/nestjs-better-auth';
 import {
   eq,
   and,
@@ -11,7 +12,9 @@ import {
   gte,
   gt,
 } from 'drizzle-orm';
-import { type UUID } from 'node:crypto';
+import { randomUUID } from 'node:crypto';
+
+import { auth } from 'src/lib/auth/auth';
 import {
   DATABASE_CONNECTION,
   type DatabaseClient,
@@ -23,91 +26,89 @@ import {
   userBudgetTable,
 } from 'src/lib/db/schema/schema';
 import { Category } from 'src/lib/graphhql/category.schema';
+import { Color, Icon } from 'src/lib/graphhql/enums/category.enums';
+import {
+  CreateCategoryInput,
+  UpdateCategoryInput,
+} from 'src/lib/graphhql/inputs/category.inputs';
 
 @Injectable()
 export class BankService {
   constructor(
     @Inject(DATABASE_CONNECTION)
-    private db: DatabaseClient,
+    private readonly db: DatabaseClient,
+
+    private readonly authService: AuthService<typeof auth>,
   ) {}
 
-  public async getAll({ monthDate, budgetId }) {
+  public async getAll({
+    monthDate,
+    budgetId,
+  }: {
+    monthDate: Date;
+    budgetId: string;
+  }) {
+    const session = await this.authService.api.getSession();
+
     // Then get categories
-    const results = (
-      await this.db
-        .select({
-          ...getTableColumns(categoryTable),
-          budget: { ...getTableColumns(budgetTable) },
-          totalSpent: sql`COALESCE(sum(${transactionTable.amount}), 0)`.mapWith(
-            Number,
-          ),
-        })
-        .from(categoryTable)
-        .leftJoin(
-          transactionTable,
-          eq(transactionTable.categoryId, categoryTable.id),
-        )
-        .innerJoin(budgetTable, eq(budgetTable.id, categoryTable.budgetId))
-        .innerJoin(
-          userBudgetTable,
-          eq(userBudgetTable.budgetId, budgetTable.id),
-        )
-        .where(
-          and(
-            eq(userBudgetTable.userId, this._userId),
-            budgetId
-              ? eq(budgetTable.id, budgetId)
-              : eq(budgetTable.isDefault, true),
-            !monthDate
-              ? undefined
-              : lte(
-                  categoryTable.startDate,
+    const results = (await this.db
+      .select({
+        ...getTableColumns(categoryTable),
+        budget: { ...getTableColumns(budgetTable) },
+        totalSpent: sql`COALESCE(sum(${transactionTable.amount}), 0)`.mapWith(
+          Number,
+        ),
+      })
+      .from(categoryTable)
+      .leftJoin(
+        transactionTable,
+        eq(transactionTable.categoryId, categoryTable.id),
+      )
+      .innerJoin(budgetTable, eq(budgetTable.id, categoryTable.budgetId))
+      .innerJoin(userBudgetTable, eq(userBudgetTable.budgetId, budgetTable.id))
+      .where(
+        and(
+          eq(userBudgetTable.userId, session!.user.id),
+          budgetId
+            ? eq(budgetTable.id, budgetId)
+            : eq(budgetTable.isDefault, true),
+          !monthDate
+            ? undefined
+            : lte(
+                categoryTable.startDate,
+                new Date(
+                  monthDate.getUTCFullYear(),
+                  monthDate.getUTCMonth() + 1,
+                  0,
+                ),
+              ),
+          !monthDate
+            ? undefined
+            : or(
+                isNull(categoryTable.endDate),
+                gte(
+                  categoryTable.endDate,
                   new Date(
                     monthDate.getUTCFullYear(),
-                    monthDate.getUTCMonth() + 1,
-                    0,
+                    monthDate.getUTCMonth(),
+                    1,
                   ),
                 ),
-            !monthDate
-              ? undefined
-              : or(
-                  isNull(categoryTable.endDate),
-                  gte(
-                    categoryTable.endDate,
-                    new Date(
-                      monthDate.getUTCFullYear(),
-                      monthDate.getUTCMonth(),
-                      1,
-                    ),
-                  ),
-                ),
-          ),
-        )
-        .orderBy(asc(categoryTable.name))
-        .groupBy((t) => [
-          t.id,
-          t.amount,
-          t.budgetId,
-          t.startDate,
-          t.endDate,
-          t.name,
-          t.budget.id,
-          t.budget.name,
-          t.budget.isDefault,
-        ])
-    ).map(
-      (category) =>
-        ({
-          ...category,
-          color:
-            ColorEnum[
-              snakeToPascalCase(category.color) as keyof typeof ColorEnum
-            ],
-          icon: IconEnum[
-            snakeToPascalCase(category.icon) as keyof typeof IconEnum
-          ],
-        }) as Category,
-    );
+              ),
+        ),
+      )
+      .orderBy(asc(categoryTable.name))
+      .groupBy((t) => [
+        t.id,
+        t.amount,
+        t.budgetId,
+        t.startDate,
+        t.endDate,
+        t.name,
+        t.budget.id,
+        t.budget.name,
+        t.budget.isDefault,
+      ])) as Category[];
 
     const otherCategoryTransactions = (
       await this.db
@@ -137,27 +138,31 @@ export class BankService {
 
     if (otherCategoryTransactions?.amount > 0) {
       results.push({
-        id: randomUUID() as UUID,
+        id: randomUUID(),
         budget: results[0].budget,
+        budgetId: results[0].budgetId,
         name: 'Uncategorized',
-        color: ColorEnum.Blue,
-        icon: IconEnum.Ellipsis,
+        color: Color.BLUE,
+        icon: Icon.ELLIPSIS,
         amount: 0,
         totalSpent: otherCategoryTransactions.amount,
         startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+        endDate: null,
       } as Category);
     }
 
     return results;
   }
 
-  public async get({ id }: QueryCategoryArgs): Promise<Category | undefined> {
+  public async get({ id }: { id: string }) {
+    const session = await this.authService.api.getSession();
+
     const result = (
       await this.db
         .select({
           ...getTableColumns(categoryTable),
           budget: { ...getTableColumns(budgetTable) },
-          totalSpent: db.$count(
+          totalSpent: this.db.$count(
             transactionTable,
             eq(transactionTable.categoryId, categoryTable.id),
           ),
@@ -171,7 +176,7 @@ export class BankService {
         .where(
           and(
             eq(categoryTable.id, id),
-            eq(userBudgetTable.userId, this._userId),
+            eq(userBudgetTable.userId, session!.user.id),
           ),
         )
         .limit(1)
@@ -180,7 +185,7 @@ export class BankService {
     return result as Category;
   }
 
-  public async create({ input }) {
+  public async create({ input }: { input: CreateCategoryInput }) {
     const category = (
       await this.db
         .insert(categoryTable)
@@ -207,10 +212,12 @@ export class BankService {
         .limit(1)
     )[0];
 
-    return result as Category;
+    return result;
   }
 
-  public async update({ input }) {
+  public async update({ input }: { input: UpdateCategoryInput }) {
+    const session = await this.authService.api.getSession();
+
     const oldCategory = (
       await this.db
         .select(getTableColumns(categoryTable))
@@ -223,7 +230,7 @@ export class BankService {
         .where(
           and(
             eq(categoryTable.id, input.id),
-            eq(userBudgetTable.userId, this._userId),
+            eq(userBudgetTable.userId, session!.user.id),
           ),
         )
     )[0];
@@ -263,7 +270,7 @@ export class BankService {
             .values({
               name: input.name != null ? input.name : '',
               budgetId: oldCategory.budgetId,
-              amount: input.amount != null ? input.amount! : 0,
+              amount: input.amount != null ? input.amount : 0,
             })
             .returning({ id: categoryTable.id })
         )[0];
@@ -286,22 +293,10 @@ export class BankService {
         .limit(1)
     )[0];
 
-    return {
-      ...result!,
-      color:
-        ColorEnum[snakeToPascalCase(result.color) as keyof typeof ColorEnum],
-      icon: IconEnum[snakeToPascalCase(result.icon) as keyof typeof IconEnum],
-      budget: {
-        ...result.budget,
-        color:
-          ColorEnum[
-            snakeToPascalCase(result.budget.color) as keyof typeof ColorEnum
-          ],
-      },
-    };
+    return result;
   }
 
-  public async delete({ id }) {
+  public async delete({ id }: { id: string }) {
     // Setting end dates will maintian categories for past months so that users can
     // view their history without it being altered from deleting categories in the future
     const category = await this.get({ id });
@@ -358,6 +353,6 @@ export class BankService {
       )[0];
     }
 
-    return result.id as UUID;
+    return result.id;
   }
 }

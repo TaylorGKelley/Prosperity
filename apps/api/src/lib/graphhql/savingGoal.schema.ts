@@ -1,12 +1,12 @@
 import { Field, Float, ID, ObjectType } from '@nestjs/graphql';
 import { Color, Icon } from './enums/category.enums';
-import { type UUID } from 'node:crypto';
+
 import { Budget } from './budget.schema';
 
 @ObjectType()
 export class SavingGoal {
   @Field(() => ID)
-  id: UUID;
+  id: string;
 
   @Field(() => String)
   title: string;

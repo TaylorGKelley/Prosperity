@@ -1,12 +1,12 @@
 import { Field, Float, ID, ObjectType } from '@nestjs/graphql';
 import { Color, Icon } from './enums/category.enums';
-import { type UUID } from 'node:crypto';
+
 import { Budget } from './budget.schema';
 
 @ObjectType()
 export class Category {
   @Field(() => ID)
-  id: UUID;
+  id: string;
 
   @Field(() => String)
   name: string;
@@ -28,5 +28,5 @@ export class Category {
 
   @Field(() => Budget)
   budget: Budget;
-  budgetId: UUID;
+  budgetId: string;
 }

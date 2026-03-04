@@ -3,15 +3,13 @@ import { budgetTable } from './budget.schema';
 import { relations } from 'drizzle-orm';
 import { transactionTable } from './transaction.schema';
 import { colorEnum } from './category.schema';
-import { type UUID } from 'node:crypto';
 
 export const bankTable = pgTable(
   'bank',
   {
-    id: uuid('id').$type<UUID>().primaryKey().defaultRandom(),
+    id: uuid('id').primaryKey().defaultRandom(),
     tellerId: varchar('teller_id', { length: 256 }).notNull(),
     budgetId: uuid('budget_id')
-      .$type<UUID>()
       .references(() => budgetTable.id, {
         onDelete: 'cascade',
       })

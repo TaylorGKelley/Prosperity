@@ -5,14 +5,12 @@ import { budgetTable } from './budget.schema';
 import { boolean } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 import { colorEnum, iconEnum } from './category.schema';
-import { type UUID } from 'node:crypto';
 
 export const savingGoalTable = pgTable(
   'saving_goal',
   {
-    id: uuid('id').$type<UUID>().primaryKey().defaultRandom(),
+    id: uuid('id').primaryKey().defaultRandom(),
     budgetId: uuid('budget_id')
-      .$type<UUID>()
       .references(() => budgetTable.id, {
         onDelete: 'cascade',
       })

@@ -1,11 +1,10 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Color } from './enums/category.enums';
-import { type UUID } from 'node:crypto';
 
 @ObjectType()
 export class Budget {
   @Field(() => ID)
-  id: UUID;
+  id: string;
 
   @Field(() => String)
   name: string;
