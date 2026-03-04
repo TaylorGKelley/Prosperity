@@ -33,7 +33,7 @@ import {
 } from 'src/lib/graphhql/inputs/category.inputs';
 
 @Injectable()
-export class BankService {
+export class CategoryService {
   constructor(
     @Inject(DATABASE_CONNECTION)
     private readonly db: DatabaseClient,

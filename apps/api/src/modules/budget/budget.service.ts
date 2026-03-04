@@ -31,7 +31,7 @@ export class BudgetService {
       .select(getTableColumns(budgetTable))
       .from(budgetTable)
       .innerJoin(userBudgetTable, eq(userBudgetTable.budgetId, budgetTable.id))
-      .where(eq(userBudgetTable.userId, session?.user.id));
+      .where(eq(userBudgetTable.userId, session!.user.id));
 
     return results;
   }
@@ -50,7 +50,7 @@ export class BudgetService {
         .where(
           and(
             eq(budgetTable.id, id),
-            eq(userBudgetTable.userId, session?.user.id),
+            eq(userBudgetTable.userId, session!.user.id),
           ),
         )
     )[0];
@@ -85,7 +85,7 @@ export class BudgetService {
 
       await tx
         .insert(userBudgetTable)
-        .values({ userId: session?.user.id, budgetId: result.id });
+        .values({ userId: session!.user.id, budgetId: result.id });
     });
 
     return result!;

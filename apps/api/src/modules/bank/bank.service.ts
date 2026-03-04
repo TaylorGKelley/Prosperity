@@ -1,6 +1,5 @@
 import { Inject, Injectable, Scope } from '@nestjs/common';
 import { AuthService } from '@thallesp/nestjs-better-auth';
-import { UUID } from 'crypto';
 import { and, eq, getTableColumns } from 'drizzle-orm';
 import { auth } from 'src/lib/auth/auth';
 import {
@@ -45,7 +44,7 @@ export class BankService {
       .innerJoin(userBudgetTable, eq(userBudgetTable.budgetId, budgetTable.id))
       .where(
         and(
-          eq(userBudgetTable.userId, session?.user.id),
+          eq(userBudgetTable.userId, session!.user.id),
           budgetId
             ? eq(budgetTable.id, budgetId)
             : eq(budgetTable.isDefault, true),
@@ -82,9 +81,16 @@ export class BankService {
         lastFour: parseInt(bankInfo?.last_four),
         name: bankInfo?.name,
         color: bankRecord.color,
-        type: bankInfo?.type,
-        subtype: bankInfo?.subtype,
-        status: bankInfo?.status,
+        type: bankInfo?.type.toUpperCase() as 'CREDIT' | 'DEPOSITORY',
+        subtype: bankInfo?.subtype.toUpperCase() as
+          | 'CREDIT'
+          | 'CHECKING'
+          | 'SAVINGS'
+          | 'MONEY_MARKET'
+          | 'CERTIFICATE_OF_DEPOSIT'
+          | 'TREASURY'
+          | 'SWEEP',
+        status: bankInfo?.status.toUpperCase() as 'OPEN' | 'CLOSED',
       });
     }
 
@@ -105,7 +111,7 @@ export class BankService {
         .where(
           and(
             eq(bankTable.id, id),
-            eq(userBudgetTable.userId, session?.user.id),
+            eq(userBudgetTable.userId, session!.user.id),
           ),
         )
     )[0];
@@ -154,7 +160,7 @@ export class BankService {
           userBudgetTable,
           eq(userBudgetTable.budgetId, budgetTable.id),
         )
-        .where(eq(userBudgetTable.userId, session?.user.id))
+        .where(eq(userBudgetTable.userId, session!.user.id))
     )[0];
 
     const banks = (await this.bankClient(input.accessToken).accounts.list())

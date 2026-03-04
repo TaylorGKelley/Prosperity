@@ -1,5 +1,5 @@
 import { Type } from '@nestjs/common';
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 
 export function Paginated<T>(classRef: Type<T>): any {
   @ObjectType(`${classRef.name}Edge`)
@@ -39,4 +39,13 @@ export class PageInfo {
 
   @Field(() => Boolean)
   hasNextPage: boolean;
+}
+
+@ObjectType()
+export class Institution {
+  @Field(() => ID)
+  id: string;
+
+  @Field(() => String)
+  name: string;
 }

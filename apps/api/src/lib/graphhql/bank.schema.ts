@@ -3,6 +3,7 @@ import { Field, Float, ID, Int, ObjectType } from '@nestjs/graphql';
 import { Color } from './enums/category.enums';
 import { BankStatus, BankSubtype, BankType } from './enums/bank.enums';
 import { Budget } from './budget.schema';
+import { Institution } from './utils.schema';
 
 @ObjectType()
 export class Bank {
@@ -45,13 +46,4 @@ export class Bank {
   @Field(() => Budget)
   budget: Budget;
   budgetId: string;
-}
-
-@ObjectType()
-export class Institution {
-  @Field(() => ID)
-  id: string;
-
-  @Field(() => String)
-  name: string;
 }
