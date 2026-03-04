@@ -23,8 +23,8 @@ export class Category {
   @Field(() => Date)
   startDate: Date;
 
-  @Field(() => Date)
-  endDate: Date;
+  @Field(() => Date, { nullable: true })
+  endDate: Date | null;
 
   @Field(() => Budget)
   budget: Budget;

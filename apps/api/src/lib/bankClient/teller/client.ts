@@ -8,15 +8,18 @@ export default class TellerClient {
   static BASE_URL = 'https://api.teller.io' as const;
   private readonly axiosClient: AxiosInstance;
   private readonly applicationId: string;
+  private readonly accessToken: string;
 
   constructor({
     cert,
     key,
     applicationId,
+    accessToken,
   }: {
     cert: Buffer;
     key: Buffer;
     applicationId: string;
+    accessToken: string;
   }) {
     this.axiosClient = axios.create({
       baseURL: TellerClient.BASE_URL,
@@ -24,10 +27,23 @@ export default class TellerClient {
         cert,
         key,
       }),
+      headers: {
+        'Teller-Version': '2020-10-12',
+        'User-Agent': 'Prosperity/2.0.0',
+        Authorization: `Basic ${Buffer.from(`${this.accessToken}:`).toString(
+          'base64',
+        )}`,
+      },
     });
     this.applicationId = applicationId;
+    this.accessToken = accessToken;
 
-    (this.accounts as any) = (accountId: string) => ({
+    // Set accounts equal to a object containing account functions from AccountClient or a function returning
+    // TransactionClient and BalanceClient
+    (this.accounts as (accountId: string) => {
+      transactions: TransactionClient;
+      balances: BalanceClient;
+    }) = (accountId: string) => ({
       transactions: new TransactionClient(accountId, {
         axiosClient: this.axiosClient,
       }),

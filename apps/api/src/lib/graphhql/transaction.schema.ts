@@ -3,6 +3,7 @@ import { Paginated } from './utils.schema';
 import { Bank } from './bank.schema';
 import { type UUID } from 'node:crypto';
 import { Category } from './category.schema';
+import { TransactionSyncStatus } from './enums/transaction.enums';
 
 @ObjectType()
 export class Transaction {
@@ -36,4 +37,14 @@ export class Transaction {
   categoryId: UUID;
 }
 
+@ObjectType()
 export class PaginatedTransactions extends Paginated(Transaction) {}
+
+@ObjectType()
+export class SyncTransactions {
+  @Field(() => TransactionSyncStatus)
+  status: (typeof TransactionSyncStatus)[keyof typeof TransactionSyncStatus];
+
+  @Field(() => String, { nullable: true })
+  error: string | null;
+}

@@ -17,15 +17,9 @@ export default class TransactionClient {
     this.accountId = accountId;
   }
 
-  public async list(options: { accessToken: string }) {
-    const response = await this.axiosClient.get<TransactionResponse[]>(
-      `/accounts/${this.accountId}/transactions`,
-      {
-        headers: {
-          Authorization: `Bearer ${options.accessToken}`,
-        },
-      },
+  public async list(params: Record<string, any> = {}) {
+    return await this.axiosClient.get<TransactionResponse[]>(
+      `/accounts/${this.accountId}/transactions${new URLSearchParams(params).toString()}`,
     );
-    return response.data;
   }
 }

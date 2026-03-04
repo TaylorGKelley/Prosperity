@@ -24,14 +24,16 @@ export const BANK_CLIENT = Symbol.for('BANK_CLIENT');
           throw new Error('Teller credentials missing in ConfigService');
         }
 
-        // Return the initialized class
-        return new TellerClient({
-          cert,
-          key,
-          applicationId: configService.getOrThrow<string>(
-            'TELLER_APPLICATION_ID',
-          ),
-        });
+        // Return a function to capture the access token and initialize the client
+        return ((accessToken: string) =>
+          new TellerClient({
+            cert,
+            key,
+            applicationId: configService.getOrThrow<string>(
+              'TELLER_APPLICATION_ID',
+            ),
+            accessToken,
+          })) as BankClient;
       },
       inject: [ConfigService],
     },
@@ -39,4 +41,6 @@ export const BANK_CLIENT = Symbol.for('BANK_CLIENT');
   exports: [BANK_CLIENT],
 })
 export class BankClientModule {}
-export type BankClient = InstanceType<typeof TellerClient>;
+export type BankClient = (
+  accessToken: string,
+) => InstanceType<typeof TellerClient>;

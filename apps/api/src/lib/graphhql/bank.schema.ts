@@ -50,7 +50,7 @@ export class Bank {
 @ObjectType()
 export class Institution {
   @Field(() => ID)
-  id: UUID;
+  id: string;
 
   @Field(() => String)
   name: string;
