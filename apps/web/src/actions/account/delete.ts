@@ -6,6 +6,7 @@ import {
   type DeleteAccountMutation,
   type DeleteAccountMutationVariables,
 } from "@/lib/graphql/schema/operations";
+import { UUID } from "node:crypto";
 
 type DeleteAccountResult = {
   success: boolean;
@@ -16,7 +17,7 @@ export default async function deleteAccount(
   id: UUID,
 ): Promise<DeleteAccountResult> {
   try {
-    const graphClient = await createGraphClient({ isInServerAction: true });
+    const graphClient = await createGraphClient();
     await graphClient.mutate<
       DeleteAccountMutation,
       DeleteAccountMutationVariables

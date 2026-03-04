@@ -7,6 +7,7 @@ import {
   type GetTransactionsWithPaginationQueryVariables,
 } from "@/lib/graphql/schema/operations";
 import Cursor from "@/lib/graphql/utils/Cursor";
+import { type UUID } from "node:crypto";
 
 export type GetAllTransactionsResult =
   | {
@@ -31,9 +32,7 @@ export default async function getAllTransactions(
   config?: { fromServerComponent: boolean },
 ): Promise<GetAllTransactionsResult> {
   try {
-    const graphClient = await createGraphClient({
-      isInServerAction: config?.fromServerComponent == true ? false : true,
-    });
+    const graphClient = await createGraphClient();
     const { data } = await graphClient.query<
       GetTransactionsWithPaginationQuery,
       GetTransactionsWithPaginationQueryVariables
