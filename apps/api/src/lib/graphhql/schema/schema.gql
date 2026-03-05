@@ -277,14 +277,8 @@ enum TransactionSyncStatus {
 }
 
 type Query {
-  transactions(input: GetTransactionsInput!): [Transaction!]!
+  transactions(pagination: PaginationInput!, monthDate: DateTime!, budgetId: String!): [Transaction!]!
   transaction(id: String!): Transaction!
-}
-
-input GetTransactionsInput {
-  monthDate: DateTime!
-  pagination: PaginationInput!
-  budgetId: ID!
 }
 
 input PaginationInput {

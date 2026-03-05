@@ -4,7 +4,7 @@ import {
   SyncTransactions,
   Transaction,
 } from 'src/lib/graphhql/transaction.schema';
-import { GetTransactionsInput } from 'src/lib/graphhql/inputs/transaction.inputs';
+import { PaginationInput } from 'src/lib/graphhql/inputs/utils.inputs';
 
 @Resolver()
 export class TransactionResolver {
@@ -12,8 +12,9 @@ export class TransactionResolver {
 
   @Query(() => [Transaction])
   public async transactions(
-    @Args('input')
-    { monthDate, pagination, budgetId }: GetTransactionsInput,
+    @Args('pagination') pagination: PaginationInput,
+    @Args('monthDate') monthDate: Date,
+    @Args('budgetId') budgetId: string,
   ) {
     return this.transactionService.getAll({ monthDate, pagination, budgetId });
   }
