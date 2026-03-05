@@ -28,19 +28,22 @@ import { authSettings } from './lib/auth/auth';
       context: ({ req, res }: { req: Request; res: Response }) => ({
         req,
         res,
-      }), // Incase direct access is needed (like for better-auth usage or setting/reading cookies)
+        headers: req.headers,
+      }),
     }),
     DatabaseModule,
     AuthModule.forRootAsync({
       imports: [DatabaseModule],
-      useFactory: (db: NodePgDatabase) => ({
-        auth: betterAuth({
-          ...authSettings,
-          database: drizzleAdapter(db, {
-            provider: 'pg',
+      useFactory: (db: NodePgDatabase) => {
+        return {
+          auth: betterAuth({
+            ...authSettings,
+            database: drizzleAdapter(db, {
+              provider: 'pg',
+            }),
           }),
-        }),
-      }),
+        };
+      },
       inject: [DATABASE_CONNECTION],
     }),
     BankClientModule,

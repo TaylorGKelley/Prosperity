@@ -30,7 +30,7 @@ import {
 } from 'src/lib/db/schema/schema';
 import { Color, Icon } from 'src/lib/graphhql/enums/category.enums';
 import { TransactionSyncStatus } from 'src/lib/graphhql/enums/transaction.enums';
-import { GetTransactionsInput } from 'src/lib/graphhql/inputs/transaction.inputs';
+import { PaginationInput } from 'src/lib/graphhql/inputs/utils.inputs';
 import Cursor from 'src/utils/cursor.util';
 import { decrypt } from 'src/utils/encryption.util';
 
@@ -60,7 +60,11 @@ export class TransactionService {
     monthDate,
     budgetId,
     pagination,
-  }: GetTransactionsInput) {
+  }: {
+    monthDate: Date;
+    budgetId: string;
+    pagination?: PaginationInput;
+  }) {
     const session = await this.authService.api.getSession();
 
     let cursorFilter: SQL | undefined = undefined;
