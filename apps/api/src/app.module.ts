@@ -31,7 +31,6 @@ import { authSettings } from './lib/auth/auth';
         headers: req.headers,
       }),
     }),
-    DatabaseModule,
     AuthModule.forRootAsync({
       imports: [DatabaseModule],
       useFactory: (db: NodePgDatabase) => {
@@ -46,6 +45,7 @@ import { authSettings } from './lib/auth/auth';
       },
       inject: [DATABASE_CONNECTION],
     }),
+    DatabaseModule,
     BankClientModule,
   ],
   controllers: [HealthController],

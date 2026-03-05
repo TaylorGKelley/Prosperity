@@ -1,4 +1,5 @@
 import { Inject, Injectable, Scope } from '@nestjs/common';
+import { REQUEST } from '@nestjs/core';
 import { AuthService } from '@thallesp/nestjs-better-auth';
 import { and, eq, getTableColumns } from 'drizzle-orm';
 import { auth } from 'src/lib/auth/auth';
@@ -29,13 +30,16 @@ export class BankService {
   constructor(
     @Inject(DATABASE_CONNECTION)
     private readonly db: DatabaseClient,
+    @Inject(REQUEST) private gqlContext: { req: Request; res: Response },
     @Inject(BANK_CLIENT)
     private readonly bankClient: BankClient,
     private readonly authService: AuthService<typeof auth>,
   ) {}
 
   public async getAll({ budgetId }: { budgetId: string }) {
-    const session = await this.authService.api.getSession();
+    const session = await this.authService.api.getSession({
+      headers: this.gqlContext.req.headers,
+    });
 
     const bankRecords = await this.db
       .select(this._bankColumns)
@@ -97,7 +101,9 @@ export class BankService {
     return result;
   }
   public async get({ id }: { id: string }) {
-    const session = await this.authService.api.getSession();
+    const session = await this.authService.api.getSession({
+      headers: this.gqlContext.req.headers,
+    });
 
     const result = (
       await this.db
@@ -146,7 +152,9 @@ export class BankService {
   }
 
   public async create({ input }: { input: CreateAccountInput }) {
-    const session = await this.authService.api.getSession();
+    const session = await this.authService.api.getSession({
+      headers: this.gqlContext.req.headers,
+    });
 
     const { iv: accessTokenIV, encryptedToken: accessToken } = encrypt(
       input.accessToken,

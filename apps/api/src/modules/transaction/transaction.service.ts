@@ -33,6 +33,7 @@ import { TransactionSyncStatus } from 'src/lib/graphhql/enums/transaction.enums'
 import { PaginationInput } from 'src/lib/graphhql/inputs/utils.inputs';
 import Cursor from 'src/utils/cursor.util';
 import { decrypt } from 'src/utils/encryption.util';
+import { REQUEST } from '@nestjs/core';
 
 @Injectable()
 export class TransactionService {
@@ -53,6 +54,8 @@ export class TransactionService {
     @Inject(BANK_CLIENT)
     private bankClient: BankClient,
 
+    @Inject(REQUEST) private gqlContext: { req: Request; res: Response },
+
     private authService: AuthService<typeof auth>,
   ) {}
 
@@ -65,7 +68,9 @@ export class TransactionService {
     budgetId: string;
     pagination?: PaginationInput;
   }) {
-    const session = await this.authService.api.getSession();
+    const session = await this.authService.api.getSession({
+      headers: this.gqlContext.req.headers,
+    });
 
     let cursorFilter: SQL | undefined = undefined;
 
@@ -194,7 +199,9 @@ export class TransactionService {
   }
 
   public async get({ id }: { id: string }) {
-    const session = await this.authService.api.getSession();
+    const session = await this.authService.api.getSession({
+      headers: this.gqlContext.req.headers,
+    });
 
     const result = (
       await this.db
@@ -246,7 +253,9 @@ export class TransactionService {
 
   public async sync() {
     try {
-      const session = await this.authService.api.getSession();
+      const session = await this.authService.api.getSession({
+        headers: this.gqlContext.req.headers,
+      });
 
       const accounts = await this.db
         .select(getTableColumns(bankTable))

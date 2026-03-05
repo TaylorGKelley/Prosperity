@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { REQUEST } from '@nestjs/core';
 import { AuthService } from '@thallesp/nestjs-better-auth';
 import { eq, and, not } from 'drizzle-orm';
 import { getTableColumns } from 'drizzle-orm';
@@ -21,11 +22,15 @@ export class BudgetService {
     @Inject(DATABASE_CONNECTION)
     private readonly db: DatabaseClient,
 
+    @Inject(REQUEST) private gqlContext: { req: Request; res: Response },
+
     private readonly authService: AuthService<typeof auth>,
   ) {}
 
   public async getAll(): Promise<Budget[]> {
-    const session = await this.authService.api.getSession();
+    const session = await this.authService.api.getSession({
+      headers: this.gqlContext.req.headers,
+    });
 
     const results = await this.db
       .select(getTableColumns(budgetTable))
@@ -37,7 +42,9 @@ export class BudgetService {
   }
 
   public async get({ id }: { id: string }) {
-    const session = await this.authService.api.getSession();
+    const session = await this.authService.api.getSession({
+      headers: this.gqlContext.req.headers,
+    });
 
     const result = (
       await this.db
@@ -59,7 +66,9 @@ export class BudgetService {
   }
 
   public async create({ input }: { input: CreateBudgetInput }) {
-    const session = await this.authService.api.getSession();
+    const session = await this.authService.api.getSession({
+      headers: this.gqlContext.req.headers,
+    });
 
     let result: typeof budgetTable.$inferSelect;
     await this.db.transaction(async (tx) => {

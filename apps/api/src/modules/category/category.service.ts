@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { REQUEST } from '@nestjs/core';
 import { AuthService } from '@thallesp/nestjs-better-auth';
 import {
   eq,
@@ -38,6 +39,8 @@ export class CategoryService {
     @Inject(DATABASE_CONNECTION)
     private readonly db: DatabaseClient,
 
+    @Inject(REQUEST) private gqlContext: { req: Request; res: Response },
+
     private readonly authService: AuthService<typeof auth>,
   ) {}
 
@@ -48,7 +51,9 @@ export class CategoryService {
     monthDate: Date;
     budgetId: string;
   }) {
-    const session = await this.authService.api.getSession();
+    const session = await this.authService.api.getSession({
+      headers: this.gqlContext.req.headers,
+    });
 
     // Then get categories
     const results = (await this.db
@@ -155,7 +160,9 @@ export class CategoryService {
   }
 
   public async get({ id }: { id: string }) {
-    const session = await this.authService.api.getSession();
+    const session = await this.authService.api.getSession({
+      headers: this.gqlContext.req.headers,
+    });
 
     const result = (
       await this.db
@@ -216,7 +223,9 @@ export class CategoryService {
   }
 
   public async update({ input }: { input: UpdateCategoryInput }) {
-    const session = await this.authService.api.getSession();
+    const session = await this.authService.api.getSession({
+      headers: this.gqlContext.req.headers,
+    });
 
     const oldCategory = (
       await this.db

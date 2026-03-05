@@ -36,6 +36,13 @@
       "when": 1771292908389,
       "tag": "0004_fearless_deadpool",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1772730679583,
+      "tag": "0005_long_stepford_cuckoos",
+      "breakpoints": true
     }
   ]
 }

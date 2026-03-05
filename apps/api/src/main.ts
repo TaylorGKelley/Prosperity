@@ -9,6 +9,7 @@ async function bootstrap() {
     origin: '*', // TODO: change before deploying
     credentials: 'include',
   });
+  app.useGlobalGuards();
 
   await app.listen(process.env.PORT ?? 7701);
 }

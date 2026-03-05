@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { REQUEST } from '@nestjs/core';
 import { AuthService } from '@thallesp/nestjs-better-auth';
 import { eq, and, getTableColumns } from 'drizzle-orm';
 
@@ -29,11 +30,15 @@ export class SavingGoalService {
     @Inject(DATABASE_CONNECTION)
     private readonly db: DatabaseClient,
 
+    @Inject(REQUEST) private gqlContext: { req: Request; res: Response },
+
     private readonly authService: AuthService<typeof auth>,
   ) {}
 
   public async getAll({ budgetId }: { budgetId: string }) {
-    const session = await this.authService.api.getSession();
+    const session = await this.authService.api.getSession({
+      headers: this.gqlContext.req.headers,
+    });
 
     const results = await this.db
       .select(this._savingGoalColumns)
@@ -53,7 +58,9 @@ export class SavingGoalService {
   }
 
   public async get({ id }: { id: string }) {
-    const session = await this.authService.api.getSession();
+    const session = await this.authService.api.getSession({
+      headers: this.gqlContext.req.headers,
+    });
 
     const result = (
       await this.db
