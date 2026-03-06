@@ -276,7 +276,28 @@ enum TransactionSyncStatus {
   ERROR
 }
 
+type SavingGoal {
+  id: ID!
+  title: String!
+  icon: Icon!
+  color: Color!
+  targetAmount: Float!
+  currentAmount: Float!
+  contributionAmount: Float!
+  lastContribution: DateTime!
+  prioritize: Boolean!
+  budget: Budget!
+}
+
 type Query {
+  banks(budgetId: String!): [Bank!]!
+  bank(id: String!): Bank!
+  budgets: [Budget!]!
+  budget(id: String!): Budget!
+  categories(monthDate: DateTime!, budgetId: String!): [Category!]!
+  category(id: String!): Category!
+  savingGoals(budgetId: String!): [SavingGoal!]!
+  savingGoal(id: String!): SavingGoal!
   transactions(pagination: PaginationInput!, monthDate: DateTime!, budgetId: String!): [Transaction!]!
   transaction(id: String!): Transaction!
 }
@@ -287,6 +308,65 @@ input PaginationInput {
 }
 
 type Mutation {
+  createBank(input: CreateAccountInput!): Bank!
+  deleteBank(id: String!): Bank!
+  createBudget(input: CreateBudgetInput!): Budget!
+  updateBudget(input: UpdateBudgetInput!): Budget!
+  deleteBudget(id: String!): Budget!
+  createCategory(input: CreateCategoryInput!): Category!
+  updateCategory(input: UpdateCategoryInput!): Category!
+  deleteCategory(id: String!): Category!
+  createSavingGoal(input: CreateSavingGoalInput!): SavingGoal!
+  updateSavingGoal(input: UpdateSavingGoalInput!): SavingGoal!
+  deleteSavingGoal(id: String!): SavingGoal!
   syncTransactions: SyncTransactions!
   deleteTransaction(id: String!): String!
+}
+
+input CreateAccountInput {
+  accessToken: String!
+}
+
+input CreateBudgetInput {
+  name: String!
+  color: Color!
+  isDefault: Boolean!
+}
+
+input UpdateBudgetInput {
+  id: ID!
+  name: String
+  isDefault: Boolean
+}
+
+input CreateCategoryInput {
+  budgetId: ID!
+  name: String!
+  icon: Icon!
+  color: Color!
+  amount: Float!
+}
+
+input UpdateCategoryInput {
+  id: ID!
+  name: String
+  icon: Icon
+  color: Color
+  amount: Float
+}
+
+input CreateSavingGoalInput {
+  budgetId: ID!
+  title: String!
+  targetAmount: Float!
+  contributionAmount: Float!
+  prioritize: Boolean!
+}
+
+input UpdateSavingGoalInput {
+  id: ID!
+  title: String
+  targetAmount: Float
+  contributionAmount: Float
+  prioritize: Boolean
 }

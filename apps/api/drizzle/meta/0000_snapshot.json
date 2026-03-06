@@ -1,5 +1,5 @@
 {
-  "id": "1aac8afb-fa92-4be9-8905-aa6a64b02d5d",
+  "id": "c0edc2b3-a2c4-47bf-abd0-06a781415b4a",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -572,26 +572,6 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.users": {
-      "name": "users",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
     "public.bank": {
       "name": "bank",
       "schema": "",
@@ -621,7 +601,7 @@
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
-          "default": "'FUSCHIA'"
+          "default": "'YELLOW'"
         },
         "access_token": {
           "name": "access_token",
@@ -708,7 +688,7 @@
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
-          "default": "'RECEIPT_TEXT'"
+          "default": "'BRAIN'"
         },
         "color": {
           "name": "color",
@@ -716,7 +696,7 @@
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
-          "default": "'STONE'"
+          "default": "'RED'"
         },
         "start_date": {
           "name": "start_date",
@@ -777,7 +757,7 @@
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
-          "default": "'BLUE'"
+          "default": "'PURPLE'"
         },
         "is_default": {
           "name": "is_default",
@@ -950,7 +930,7 @@
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
-          "default": "'SNOWFLAKE'"
+          "default": "'BICEPS_FLEXED'"
         },
         "color": {
           "name": "color",
@@ -958,7 +938,7 @@
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
-          "default": "'PINK'"
+          "default": "'CYAN'"
         },
         "target_amount": {
           "name": "target_amount",
@@ -1037,7 +1017,7 @@
       "columns": {
         "user_id": {
           "name": "user_id",
-          "type": "uuid",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
@@ -1050,10 +1030,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "user_budget_user_id_users_id_fk": {
-          "name": "user_budget_user_id_users_id_fk",
+        "user_budget_user_id_user_id_fk": {
+          "name": "user_budget_user_id_user_id_fk",
           "tableFrom": "user_budget",
-          "tableTo": "users",
+          "tableTo": "user",
           "columnsFrom": [
             "user_id"
           ],

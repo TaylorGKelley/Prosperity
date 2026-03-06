@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { TellerConnect, type TellerConnectOnSuccess } from 'teller-connect-react';
+import { LinkIcon } from 'lucide-react';
 
 export default function LinkAccountForm() {
 	const router = useRouter();
@@ -34,8 +35,9 @@ export default function LinkAccountForm() {
 	};
 
 	return (
-		<div>
+		<div className='teller-connect'>
 			<TellerConnect
+				id='teller-connect'
 				applicationId={process.env.NEXT_PUBLIC_TELLER_APPLICATION_ID!}
 				environment={
 					process.env.NEXT_PUBLIC_TELLER_ENVIRONMENT! as 'sandbox' | 'development' | 'production'
@@ -43,9 +45,13 @@ export default function LinkAccountForm() {
 				products={['transactions', 'balance']}
 				onSuccess={handleSuccess}
 				style={{
-					color: 'black',
+					border: '',
+					borderRadius: '',
+					padding: '',
+					outline: '',
+					background: '',
 				}}>
-				Connect to bank
+				<LinkIcon /> <span>Link Account</span>
 			</TellerConnect>
 		</div>
 	);

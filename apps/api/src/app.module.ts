@@ -15,6 +15,14 @@ import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { BankClientModule } from './lib/bankClient/bankClient.module';
 import { authSettings } from './lib/auth/auth';
+import { BankService } from './modules/bank/bank.service';
+import { BankResolver } from './modules/bank/bank.resolver';
+import { BudgetResolver } from './modules/budget/budget.resolver';
+import { BudgetService } from './modules/budget/budget.service';
+import { CategoryResolver } from './modules/category/category.resolver';
+import { CategoryService } from './modules/category/category.service';
+import { SavingGoalResolver } from './modules/savingGoal/savingGoal.resolver';
+import { SavingGoalService } from './modules/savingGoal/savingGoal.service';
 
 @Module({
   imports: [
@@ -49,6 +57,18 @@ import { authSettings } from './lib/auth/auth';
     BankClientModule,
   ],
   controllers: [HealthController],
-  providers: [HealthService, TransactionResolver, TransactionService],
+  providers: [
+    HealthService,
+    BankResolver,
+    BankService,
+    BudgetResolver,
+    BudgetService,
+    CategoryResolver,
+    CategoryService,
+    SavingGoalResolver,
+    SavingGoalService,
+    TransactionResolver,
+    TransactionService,
+  ],
 })
 export class AppModule {}

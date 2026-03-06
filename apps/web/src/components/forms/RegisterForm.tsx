@@ -7,7 +7,7 @@ import type z from 'zod';
 import { register } from '@/actions/forms/register';
 import registerFormSchema, { type RegisterFormState } from '@/lib/zod/registerFormSchema';
 import { Input } from '../ui/input';
-import { cn } from '@/utils/tw';
+import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { useForm } from 'react-hook-form';

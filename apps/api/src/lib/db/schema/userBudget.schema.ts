@@ -1,4 +1,4 @@
-import { pgTable, primaryKey, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, primaryKey, text, uuid } from 'drizzle-orm/pg-core';
 import { budgetTable } from './budget.schema';
 import { relations } from 'drizzle-orm';
 import { UUID } from 'node:crypto';
@@ -7,7 +7,7 @@ import { user } from 'src/lib/auth/schema';
 export const userBudgetTable = pgTable(
   'user_budget',
   {
-    userId: uuid('user_id')
+    userId: text('user_id')
       .references(() => user.id, {
         onDelete: 'cascade',
       })

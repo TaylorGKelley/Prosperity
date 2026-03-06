@@ -11,7 +11,7 @@ export class CategoryResolver {
   constructor(private readonly categoryService: CategoryService) {}
 
   @Query(() => [Category])
-  public async categorys(
+  public async categories(
     @Args('monthDate') monthDate: Date,
     @Args('budgetId') budgetId: string,
   ) {

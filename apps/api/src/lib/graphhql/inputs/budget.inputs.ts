@@ -3,9 +3,6 @@ import { Color } from '../enums/category.enums';
 
 @InputType()
 export class CreateBudgetInput {
-  @Field(() => ID)
-  id: string;
-
   @Field(() => String)
   name: string;
 
