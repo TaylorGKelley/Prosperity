@@ -12,13 +12,12 @@ export const authSettings = {
   secret: process.env.BETTER_AUTH_SECRET as string,
   emailAndPassword: {
     enabled: true,
-    requireEmailVerification: true,
+    autoSignIn: true,
   },
-  sendVerificationEmail: async () => {},
   socialProviders: {
     google: {
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      clientId: process.env.BETTER_AUTH_GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.BETTER_AUTH_GOOGLE_CLIENT_SECRET as string,
     },
   },
   plugins: [twoFactor(), passkey()],

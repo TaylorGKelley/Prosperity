@@ -1,6 +1,7 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { TransactionService } from './transaction.service';
 import {
+  PaginatedTransactions,
   SyncTransactions,
   Transaction,
 } from 'src/lib/graphhql/transaction.schema';
@@ -10,7 +11,7 @@ import { PaginationInput } from 'src/lib/graphhql/inputs/utils.inputs';
 export class TransactionResolver {
   constructor(private readonly transactionService: TransactionService) {}
 
-  @Query(() => [Transaction])
+  @Query(() => PaginatedTransactions)
   public async transactions(
     @Args('pagination') pagination: PaginationInput,
     @Args('monthDate') monthDate: Date,

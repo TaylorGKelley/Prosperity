@@ -1,11 +1,7 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import "tw-animate-css";
 
-/* `tw-animate-css` will be imported from the app layout (JS) so Turbopack/PostCSS doesn't try to resolve it here:
-   in apps/web/src/app/layout.tsx add:
-     import 'tw-animate-css';
-*/
+@import "@daveyplate/better-auth-ui/css";
 
 @custom-variant dark (&:is(.dark *));
 

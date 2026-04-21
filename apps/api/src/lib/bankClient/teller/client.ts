@@ -37,13 +37,12 @@ export default class TellerClient {
     });
     this.applicationId = applicationId;
     this.accessToken = accessToken;
+  }
 
-    // Set accounts equal to a object containing account functions from AccountClient or a function returning
-    // TransactionClient and BalanceClient
-    (this.accounts as (accountId: string) => {
-      transactions: TransactionClient;
-      balances: BalanceClient;
-    }) = (accountId: string) => ({
+  get accounts() {
+    const accountClient = new AccountClient({ axiosClient: this.axiosClient });
+
+    const fn = (accountId: string) => ({
       transactions: new TransactionClient(accountId, {
         axiosClient: this.axiosClient,
       }),
@@ -52,15 +51,6 @@ export default class TellerClient {
       }),
     });
 
-    const accountClient = new AccountClient({ axiosClient: this.axiosClient });
-    Object.entries(accountClient).forEach(([key, value]) => {
-      this.accounts[key] = value as AccountClient[keyof AccountClient];
-    });
+    return Object.assign(fn, accountClient);
   }
-
-  public accounts: AccountClient &
-    ((accountId: string) => {
-      transactions: TransactionClient;
-      balances: BalanceClient;
-    });
 }

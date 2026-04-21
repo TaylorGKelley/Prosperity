@@ -1,30 +1,17 @@
 import { gql } from "@apollo/client";
 
-export const GET_ALL_ACCOUNTS = gql`
-  query GetAllAccounts {
-    banks {
+export const CREATE_ACCOUNT = gql`
+  mutation CreateAccount($accessToken: String!) {
+    createBank(input: { accessToken: $accessToken }) {
       id
       currency
       enrollmentId
       lastFour
       name
+      color
       type
       subtype
       status
     }
-  }
-`;
-
-export const CREATE_ACCOUNT = gql`
-  mutation CreateAccount($accessToken: String!) {
-    createBank(input: { accessToken: $accessToken }) {
-      id
-    }
-  }
-`;
-
-export const DELETE_ACCOUNT = gql`
-  mutation DeleteAccount($id: ID!) {
-    deleteBank(id: $id)
   }
 `;

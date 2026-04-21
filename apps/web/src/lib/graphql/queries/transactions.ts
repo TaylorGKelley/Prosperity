@@ -1,54 +1,68 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
-export const GET_TRANSACTIONS_WITH_PAGINATION = gql`
-	query GetTransactionsWithPagination($monthDate: DateTime!, $pagination: CursorPaginationInput) {
-		transactions(monthDate: $monthDate, pagination: $pagination) {
-			items {
-				id
-				tellerId
-				accountId
-				categoryId
-				amount
-				date
-				description
-				status
-				type
-			}
-			pageInfo {
-				hasNextPage
-				endCursor
-				length
-			}
-		}
-	}
+export const TRANSACTION_PAGE_QUERY = gql`
+  query TransactionPage($monthDate: DateTime!, $budgetId: String!) {
+    banks(budgetId: $budgetId) {
+      id
+      currency
+      enrollmentId
+      lastFour
+      name
+      color
+      type
+      subtype
+      status
+    }
+    categories(monthDate: $monthDate, budgetId: $budgetId) {
+      id
+      name
+      icon
+      color
+      amount
+      endDate
+    }
+  }
 `;
 
-export const GET_TRANSACTION_BY_ID = gql`
-	query GetTransactionById($id: ID!) {
-		transaction(id: $id) {
-			id
-			accountId
-			categoryId
-			amount
-			date
-			description
-			status
-			type
-		}
-	}
+export const GET_ALL_TRANSACTIONS_QUERY = gql`
+  query GetAllTransactions(
+    $monthDate: DateTime
+    $budgetId: String!
+    $limit: Int
+    $cursor: String
+  ) {
+    transactions(monthDate: $monthDate, budgetId: $budgetId) {
+      items {
+        id
+        tellerId
+        amount
+        date
+        description
+        status
+        type
+        category {
+          id
+          icon
+          color
+        }
+        account {
+          id
+        }
+      }
+      pageInfo {
+        length
+        hasNextPage
+        endCursor
+      }
+    }
+  }
 `;
 
-export const SYNC_TRANSACTIONS = gql`
-	mutation SyncTransactions {
-		syncTransactions {
-			status
-			error
-		}
-	}
-`;
-
-export const DELETE_TRANSACTION = gql`
-	mutation DeleteTransaction($id: ID!) {
-		deleteTransaction(id: $id)
-	}
+export const SYNC_TRANSACTIONS_MUTATION = gql`
+  mutation SyncTransactions {
+    syncTransactions {
+      status
+      error
+    }
+  }
 `;

@@ -1,4 +1,4 @@
-import BudgetSelector from "@/components/BudgetSelector";
+// import BudgetSelector from "@/components/BudgetSelector";
 import MonthFilter from "@/components/month-filter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -57,7 +57,7 @@ export default async function Home() {
         <Navbar />
         <main className="px-10 flex flex-col gap-6">
           <section className="flex justify-between items-center py-2">
-            <BudgetSelector />
+            {/*<BudgetSelector />*/}
             <MonthFilter />
           </section>
           <Card className="shadow rounded-2xl py-12 border-none">

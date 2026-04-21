@@ -2,13 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type PageInfo {
-  startCursor: String
-  endCursor: String
-  hasPreviousPage: Boolean!
-  hasNextPage: Boolean!
-}
-
 type Institution {
   id: ID!
   name: String!
@@ -261,9 +254,15 @@ type Transaction {
   category: Category!
 }
 
-type TransactionEdge {
-  cursor: String!
-  node: Transaction!
+type TransactionPageInfo {
+  length: Int!
+  hasNextPage: Boolean!
+  endCursor: String
+}
+
+type PaginatedTransactions {
+  items: [Transaction!]!
+  pageInfo: TransactionPageInfo!
 }
 
 type SyncTransactions {
@@ -298,7 +297,7 @@ type Query {
   category(id: String!): Category!
   savingGoals(budgetId: String!): [SavingGoal!]!
   savingGoal(id: String!): SavingGoal!
-  transactions(pagination: PaginationInput!, monthDate: DateTime!, budgetId: String!): [Transaction!]!
+  transactions(pagination: PaginationInput!, monthDate: DateTime!, budgetId: String!): PaginatedTransactions!
   transaction(id: String!): Transaction!
 }
 
