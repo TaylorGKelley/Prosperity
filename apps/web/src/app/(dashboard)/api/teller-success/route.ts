@@ -13,6 +13,8 @@ export async function POST(req: Request) {
     // Send Graph Mutation
     const cookie = req.headers.get("cookie") ?? "";
     const client = await createGraphClient({ cookie });
+
+    // Send account access token from the TellerConnect component to the server
     const { data: response } = await client.mutate<
       CreateAccountMutation,
       CreateAccountMutationVariables
