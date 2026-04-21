@@ -146,7 +146,7 @@ export default async function Transactions({ params }: TransactionsPageProps) {
         <section className="flex flex-col gap-9">
           <h3 className="text-2xl font-semibold">Accounts</h3>
           <ul className="flex flex-col gap-9">
-            {data!.accounts.map((account) => (
+            {data!.banks.map((account) => (
               <li key={account.id} className="flex gap-5 items-center">
                 <CategoryIcon
                   icon={"wallet"}

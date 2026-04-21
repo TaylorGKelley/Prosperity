@@ -20,6 +20,9 @@ export class Category {
   @Field(() => Float)
   amount: number;
 
+  @Field(() => Float)
+  totalSpent: number;
+
   @Field(() => Date)
   startDate: Date;
 

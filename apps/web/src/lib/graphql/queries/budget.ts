@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const BUDGET_PAGE_QUERY = gql`
-  query BudgetPage($monthDate: DateTime!, $budgetId: String) {
+  query BudgetPage($monthDate: DateTime!, $budgetId: String!) {
     budgets {
       id
       name
@@ -18,7 +18,7 @@ export const BUDGET_PAGE_QUERY = gql`
       startDate
       endDate
     }
-    accounts(budgetId: $budgetId) {
+    banks(budgetId: $budgetId) {
       id
       balance
       currency

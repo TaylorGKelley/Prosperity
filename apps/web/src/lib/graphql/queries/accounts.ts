@@ -4,6 +4,8 @@ export const CREATE_ACCOUNT = gql`
   mutation CreateAccount($accessToken: String!) {
     createBank(input: { accessToken: $accessToken }) {
       id
+      tellerId
+      balance
       currency
       enrollmentId
       lastFour
@@ -12,6 +14,18 @@ export const CREATE_ACCOUNT = gql`
       type
       subtype
       status
+      institution {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export const DELETE_ACCOUNT = gql`
+  mutation DeleteAccount($id: String!) {
+    deleteBank(id: $id) {
+      id
     }
   }
 `;

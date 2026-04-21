@@ -2,10 +2,10 @@ import { gql } from "@apollo/client";
 
 export const CREATE_CATEGORY_MUTATION = gql`
   mutation CreateCategory(
-    $budgetId: String!
+    $budgetId: ID!
     $name: String!
-    $icon: IconEnum!
-    $color: ColorEnum!
+    $icon: Icon!
+    $color: Color!
     $amount: Float!
   ) {
     createCategory(
@@ -22,6 +22,7 @@ export const CREATE_CATEGORY_MUTATION = gql`
       icon
       color
       amount
+      totalSpent
       startDate
       endDate
       budget {
@@ -35,7 +36,7 @@ export const CREATE_CATEGORY_MUTATION = gql`
 `;
 
 export const DELETE_CATEGORY_MUTATION = gql`
-  mutation DeleteCategory($id: ID!) {
+  mutation DeleteCategory($id: String!) {
     deleteCategory(id: $id)
   }
 `;

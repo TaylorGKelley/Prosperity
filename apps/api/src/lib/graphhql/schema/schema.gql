@@ -78,6 +78,7 @@ type Category {
   icon: Icon!
   color: Color!
   amount: Float!
+  totalSpent: Float!
   startDate: DateTime!
   endDate: DateTime
   budget: Budget!

@@ -23,6 +23,7 @@ export type GetAllTransactionsResult =
 export default async function getAllTransactions(
 	filterInfo: {
 		count: number;
+		budgetId: string;
 		monthDate?: Date;
 		cursor?: {
 			date: Date;
@@ -42,6 +43,7 @@ export default async function getAllTransactions(
 			query: GET_TRANSACTIONS_WITH_PAGINATION,
 			variables: {
 				monthDate: filterInfo.monthDate || new Date(),
+				budgetId: filterInfo.budgetId,
 				pagination: {
 					count: filterInfo.count,
 					cursor: filterInfo.cursor && Cursor.encode(filterInfo.cursor),
