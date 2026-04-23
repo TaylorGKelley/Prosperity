@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { AuthUIProvider } from "@daveyplate/better-auth-ui";
-import { useRouter } from "next/navigation";
-import { authClient } from "@/lib/auth/auth";
-import Link from "next/link";
+import { AuthUIProvider } from '@daveyplate/better-auth-ui';
+import { useRouter } from 'next/navigation';
+import { authClient } from '@/lib/auth/auth';
+import Link from 'next/link';
 
 export function AuthProvider({ children }: React.PropsWithChildren) {
   const router = useRouter();
@@ -18,7 +18,7 @@ export function AuthProvider({ children }: React.PropsWithChildren) {
       }}
       Link={Link}
       social={{
-        providers: ["google"],
+        providers: ['google'],
       }}
     >
       {children}

@@ -1,19 +1,32 @@
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]?: Maybe<T[SubKey]>;
+};
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]: Maybe<T[SubKey]>;
+};
+export type MakeEmpty<
+  T extends { [key: string]: unknown },
+  K extends keyof T,
+> = { [_ in K]?: never };
+export type Incremental<T> =
+  | T
+  | {
+      [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
+    };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: import('node:crypto').UUID; output: import('node:crypto').UUID; }
-  String: { input: string; output: string; }
-  Boolean: { input: boolean; output: boolean; }
-  Int: { input: number; output: number; }
-  Float: { input: number; output: number; }
-  Date: { input: Date; output: Date; }
-  DateTime: { input: Date; output: Date; }
+  ID: { input: import('node:crypto').UUID; output: import('node:crypto').UUID };
+  String: { input: string; output: string };
+  Boolean: { input: boolean; output: boolean };
+  Int: { input: number; output: number };
+  Float: { input: number; output: number };
+  Date: { input: Date; output: Date };
+  DateTime: { input: Date; output: Date };
 };
 
 export type Account = {
@@ -34,7 +47,7 @@ export type Account = {
 
 export enum AccountStatusEnum {
   Closed = 'CLOSED',
-  Open = 'OPEN'
+  Open = 'OPEN',
 }
 
 export enum AccountSubtypeEnum {
@@ -44,12 +57,12 @@ export enum AccountSubtypeEnum {
   MoneyMarket = 'MONEY_MARKET',
   Savings = 'SAVINGS',
   Sweep = 'SWEEP',
-  Treasury = 'TREASURY'
+  Treasury = 'TREASURY',
 }
 
 export enum AccountTypeEnum {
   Credit = 'CREDIT',
-  Depository = 'DEPOSITORY'
+  Depository = 'DEPOSITORY',
 }
 
 export type BasicAccount = {
@@ -128,7 +141,7 @@ export enum ColorEnum {
   Stone = 'STONE',
   Teal = 'TEAL',
   Violet = 'VIOLET',
-  Yellow = 'YELLOW'
+  Yellow = 'YELLOW',
 }
 
 export type CreateAccountInput = {
@@ -312,7 +325,7 @@ export enum IconEnum {
   Utensils = 'UTENSILS',
   Wallet = 'WALLET',
   Wheat = 'WHEAT',
-  Wrench = 'WRENCH'
+  Wrench = 'WRENCH',
 }
 
 export type Institution = {
@@ -338,61 +351,49 @@ export type Mutation = {
   updateSavingGoal: SavingGoal;
 };
 
-
 export type MutationCreateAccountArgs = {
   input: CreateAccountInput;
 };
-
 
 export type MutationCreateBudgetArgs = {
   input: CreateBudgetInput;
 };
 
-
 export type MutationCreateCategoryArgs = {
   input: CreateCategoryInput;
 };
-
 
 export type MutationCreateSavingGoalArgs = {
   input: CreateSavingGoalInput;
 };
 
-
 export type MutationDeleteAccountArgs = {
   id: Scalars['ID']['input'];
 };
-
 
 export type MutationDeleteBudgetArgs = {
   id: Scalars['ID']['input'];
 };
 
-
 export type MutationDeleteCategoryArgs = {
   id: Scalars['ID']['input'];
 };
-
 
 export type MutationDeleteSavingGoalArgs = {
   id: Scalars['ID']['input'];
 };
 
-
 export type MutationDeleteTransactionArgs = {
   id: Scalars['ID']['input'];
 };
-
 
 export type MutationUpdateBudgetArgs = {
   input: UpdateBudgetInput;
 };
 
-
 export type MutationUpdateCategoryArgs = {
   input: UpdateCategoryInput;
 };
-
 
 export type MutationUpdateSavingGoalArgs = {
   input: UpdateSavingGoalInput;
@@ -425,47 +426,38 @@ export type Query = {
   transactions: PaginatedTransaction;
 };
 
-
 export type QueryAccountArgs = {
   id: Scalars['String']['input'];
 };
-
 
 export type QueryAccountsArgs = {
   budgetId?: InputMaybe<Scalars['ID']['input']>;
 };
 
-
 export type QueryBudgetArgs = {
   id: Scalars['ID']['input'];
 };
-
 
 export type QueryCategoriesArgs = {
   budgetId?: InputMaybe<Scalars['ID']['input']>;
   monthDate: Scalars['DateTime']['input'];
 };
 
-
 export type QueryCategoryArgs = {
   id: Scalars['ID']['input'];
 };
-
 
 export type QuerySavingGoalArgs = {
   id: Scalars['ID']['input'];
 };
 
-
 export type QuerySavingGoalsArgs = {
   budgetId?: InputMaybe<Scalars['ID']['input']>;
 };
 
-
 export type QueryTransactionArgs = {
   id: Scalars['ID']['input'];
 };
-
 
 export type QueryTransactionsArgs = {
   budgetId?: InputMaybe<Scalars['ID']['input']>;
@@ -508,12 +500,12 @@ export type Transaction = {
 
 export enum TransactionStatusEnum {
   Pending = 'PENDING',
-  Posted = 'POSTED'
+  Posted = 'POSTED',
 }
 
 export enum TransactionSyncStatusEnum {
   Error = 'ERROR',
-  Success = 'SUCCESS'
+  Success = 'SUCCESS',
 }
 
 export type UpdateAccountInput = {
@@ -547,21 +539,86 @@ export type CreateAccountMutationVariables = Exact<{
   accessToken: Scalars['String']['input'];
 }>;
 
-
-export type CreateAccountMutation = { __typename?: 'Mutation', createAccount: Array<{ __typename?: 'Account', id: import('node:crypto').UUID, currency: string, enrollmentId: string, lastFour: number, name: string, color: ColorEnum, type: AccountTypeEnum, subtype: AccountSubtypeEnum, status: AccountStatusEnum }> };
+export type CreateAccountMutation = {
+  __typename?: 'Mutation';
+  createAccount: Array<{
+    __typename?: 'Account';
+    id: import('node:crypto').UUID;
+    currency: string;
+    enrollmentId: string;
+    lastFour: number;
+    name: string;
+    color: ColorEnum;
+    type: AccountTypeEnum;
+    subtype: AccountSubtypeEnum;
+    status: AccountStatusEnum;
+  }>;
+};
 
 export type BudgetPageQueryVariables = Exact<{
   monthDate: Scalars['DateTime']['input'];
   budgetId?: InputMaybe<Scalars['ID']['input']>;
 }>;
 
+export type BudgetPageQuery = {
+  __typename?: 'Query';
+  budgets: Array<{
+    __typename?: 'Budget';
+    id: import('node:crypto').UUID;
+    name: string;
+    color: ColorEnum;
+    isDefault: boolean;
+  }>;
+  categories: Array<{
+    __typename?: 'Category';
+    id: import('node:crypto').UUID;
+    name: string;
+    icon: IconEnum;
+    color: ColorEnum;
+    amount: number;
+    totalSpent: number;
+    startDate: Date;
+    endDate?: Date | null;
+  }>;
+  accounts: Array<{
+    __typename?: 'Account';
+    id: import('node:crypto').UUID;
+    balance: number;
+    currency: string;
+    enrollmentId: string;
+    lastFour: number;
+    name: string;
+    color: ColorEnum;
+    type: AccountTypeEnum;
+    subtype: AccountSubtypeEnum;
+    status: AccountStatusEnum;
+    institution: { __typename?: 'Institution'; id: string; name: string };
+  }>;
+  savingGoals: Array<{
+    __typename?: 'SavingGoal';
+    id: import('node:crypto').UUID;
+    title: string;
+    icon: IconEnum;
+    color: ColorEnum;
+    targetAmount: number;
+    currentAmount: number;
+    contributionAmount: number;
+    lastContribution: Date;
+    prioritize: boolean;
+  }>;
+};
 
-export type BudgetPageQuery = { __typename?: 'Query', budgets: Array<{ __typename?: 'Budget', id: import('node:crypto').UUID, name: string, color: ColorEnum, isDefault: boolean }>, categories: Array<{ __typename?: 'Category', id: import('node:crypto').UUID, name: string, icon: IconEnum, color: ColorEnum, amount: number, totalSpent: number, startDate: Date, endDate?: Date | null }>, accounts: Array<{ __typename?: 'Account', id: import('node:crypto').UUID, balance: number, currency: string, enrollmentId: string, lastFour: number, name: string, color: ColorEnum, type: AccountTypeEnum, subtype: AccountSubtypeEnum, status: AccountStatusEnum, institution: { __typename?: 'Institution', id: string, name: string } }>, savingGoals: Array<{ __typename?: 'SavingGoal', id: import('node:crypto').UUID, title: string, icon: IconEnum, color: ColorEnum, targetAmount: number, currentAmount: number, contributionAmount: number, lastContribution: Date, prioritize: boolean }> };
+export type GetAllBudgetsQueryVariables = Exact<{ [key: string]: never }>;
 
-export type GetAllBudgetsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetAllBudgetsQuery = { __typename?: 'Query', budgets: Array<{ __typename?: 'Budget', id: import('node:crypto').UUID, name: string, isDefault: boolean }> };
+export type GetAllBudgetsQuery = {
+  __typename?: 'Query';
+  budgets: Array<{
+    __typename?: 'Budget';
+    id: import('node:crypto').UUID;
+    name: string;
+    isDefault: boolean;
+  }>;
+};
 
 export type CreateCategoryMutationVariables = Exact<{
   budgetId: Scalars['ID']['input'];
@@ -571,25 +628,101 @@ export type CreateCategoryMutationVariables = Exact<{
   amount: Scalars['Float']['input'];
 }>;
 
-
-export type CreateCategoryMutation = { __typename?: 'Mutation', createCategory: { __typename?: 'Category', id: import('node:crypto').UUID, name: string, icon: IconEnum, color: ColorEnum, amount: number, totalSpent: number, startDate: Date, endDate?: Date | null, budget: { __typename?: 'Budget', id: import('node:crypto').UUID, name: string, color: ColorEnum, isDefault: boolean } } };
+export type CreateCategoryMutation = {
+  __typename?: 'Mutation';
+  createCategory: {
+    __typename?: 'Category';
+    id: import('node:crypto').UUID;
+    name: string;
+    icon: IconEnum;
+    color: ColorEnum;
+    amount: number;
+    totalSpent: number;
+    startDate: Date;
+    endDate?: Date | null;
+    budget: {
+      __typename?: 'Budget';
+      id: import('node:crypto').UUID;
+      name: string;
+      color: ColorEnum;
+      isDefault: boolean;
+    };
+  };
+};
 
 export type DeleteCategoryMutationVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
-
-export type DeleteCategoryMutation = { __typename?: 'Mutation', deleteCategory: import('node:crypto').UUID };
+export type DeleteCategoryMutation = {
+  __typename?: 'Mutation';
+  deleteCategory: import('node:crypto').UUID;
+};
 
 export type TransactionPageQueryVariables = Exact<{
   monthDate: Scalars['DateTime']['input'];
   budgetId?: InputMaybe<Scalars['ID']['input']>;
 }>;
 
+export type TransactionPageQuery = {
+  __typename?: 'Query';
+  transactions: {
+    __typename?: 'PaginatedTransaction';
+    items: Array<{
+      __typename?: 'Transaction';
+      id: import('node:crypto').UUID;
+      tellerId: import('node:crypto').UUID;
+      amount: number;
+      date: Date;
+      description: string;
+      status: TransactionStatusEnum;
+      type: string;
+      category?: {
+        __typename?: 'BasicCategory';
+        id: import('node:crypto').UUID;
+        icon: IconEnum;
+        color: ColorEnum;
+      } | null;
+      account: { __typename?: 'BasicAccount'; id: import('node:crypto').UUID };
+    }>;
+    pageInfo?: {
+      __typename?: 'PageInformation';
+      length: number;
+      hasNextPage: boolean;
+      endCursor?: string | null;
+    } | null;
+  };
+  accounts: Array<{
+    __typename?: 'Account';
+    id: import('node:crypto').UUID;
+    currency: string;
+    enrollmentId: string;
+    lastFour: number;
+    name: string;
+    color: ColorEnum;
+    type: AccountTypeEnum;
+    subtype: AccountSubtypeEnum;
+    status: AccountStatusEnum;
+  }>;
+  categories: Array<{
+    __typename?: 'Category';
+    id: import('node:crypto').UUID;
+    name: string;
+    icon: IconEnum;
+    color: ColorEnum;
+    amount: number;
+    totalSpent: number;
+    endDate?: Date | null;
+  }>;
+};
 
-export type TransactionPageQuery = { __typename?: 'Query', transactions: { __typename?: 'PaginatedTransaction', items: Array<{ __typename?: 'Transaction', id: import('node:crypto').UUID, tellerId: import('node:crypto').UUID, amount: number, date: Date, description: string, status: TransactionStatusEnum, type: string, category?: { __typename?: 'BasicCategory', id: import('node:crypto').UUID, icon: IconEnum, color: ColorEnum } | null, account: { __typename?: 'BasicAccount', id: import('node:crypto').UUID } }>, pageInfo?: { __typename?: 'PageInformation', length: number, hasNextPage: boolean, endCursor?: string | null } | null }, accounts: Array<{ __typename?: 'Account', id: import('node:crypto').UUID, currency: string, enrollmentId: string, lastFour: number, name: string, color: ColorEnum, type: AccountTypeEnum, subtype: AccountSubtypeEnum, status: AccountStatusEnum }>, categories: Array<{ __typename?: 'Category', id: import('node:crypto').UUID, name: string, icon: IconEnum, color: ColorEnum, amount: number, totalSpent: number, endDate?: Date | null }> };
+export type SyncTransactionsMutationVariables = Exact<{ [key: string]: never }>;
 
-export type SyncTransactionsMutationVariables = Exact<{ [key: string]: never; }>;
-
-
-export type SyncTransactionsMutation = { __typename?: 'Mutation', syncTransactions: { __typename?: 'SyncTransactions', status: TransactionSyncStatusEnum, error?: string | null } };
+export type SyncTransactionsMutation = {
+  __typename?: 'Mutation';
+  syncTransactions: {
+    __typename?: 'SyncTransactions';
+    status: TransactionSyncStatusEnum;
+    error?: string | null;
+  };
+};

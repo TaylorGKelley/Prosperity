@@ -9,20 +9,20 @@ The project is structured as a **Turborepo** monorepo using **pnpm** workspaces.
 ### Applications
 
 - **`apps/api` (Backend):**
-    - Built with **NestJS**.
-    - **GraphQL** API using Apollo Driver (Code-first approach).
-    - **Drizzle ORM** for database interactions with PostgreSQL.
-    - **Better-Auth** for authentication, integrated via `@thallesp/nestjs-better-auth`.
-    - **Teller API** integration for bank connectivity.
-    - Modules: `bank`, `budget`, `category`, `savingGoal`, `transaction`.
+  - Built with **NestJS**.
+  - **GraphQL** API using Apollo Driver (Code-first approach).
+  - **Drizzle ORM** for database interactions with PostgreSQL.
+  - **Better-Auth** for authentication, integrated via `@thallesp/nestjs-better-auth`.
+  - **Teller API** integration for bank connectivity.
+  - Modules: `bank`, `budget`, `category`, `savingGoal`, `transaction`.
 
 - **`apps/web` (Frontend):**
-    - Built with **Next.js** (App Router).
-    - Styled with **Tailwind CSS** and **Radix UI** primitives.
-    - Uses **Apollo Client** and **GraphQL Request** for data fetching.
-    - Integrates **Better-Auth** client-side with Passkey and 2FA support.
-    - Employs **Next.js Server Actions** to bridge the frontend and GraphQL API.
-    - Visualizations using **Recharts**.
+  - Built with **Next.js** (App Router).
+  - Styled with **Tailwind CSS** and **Radix UI** primitives.
+  - Uses **Apollo Client** and **GraphQL Request** for data fetching.
+  - Integrates **Better-Auth** client-side with Passkey and 2FA support.
+  - Employs **Next.js Server Actions** to bridge the frontend and GraphQL API.
+  - Visualizations using **Recharts**.
 
 ### Shared Packages
 
@@ -31,20 +31,20 @@ The project is structured as a **Turborepo** monorepo using **pnpm** workspaces.
 
 ## Tech Stack
 
-| Component | Technology |
-| :--- | :--- |
-| Monorepo Management | Turborepo, pnpm |
-| Language | TypeScript |
-| Backend Framework | NestJS |
-| API Layer | GraphQL (Apollo) |
-| Database ORM | Drizzle ORM |
-| Database | PostgreSQL |
-| Authentication | Better-Auth |
-| Frontend Framework | Next.js (App Router) |
-| Styling | Tailwind CSS, Lucide React |
-| UI Components | Radix UI |
-| Charts | Recharts |
-| Bank Connectivity | Teller API |
+| Component           | Technology                 |
+| :------------------ | :------------------------- |
+| Monorepo Management | Turborepo, pnpm            |
+| Language            | TypeScript                 |
+| Backend Framework   | NestJS                     |
+| API Layer           | GraphQL (Apollo)           |
+| Database ORM        | Drizzle ORM                |
+| Database            | PostgreSQL                 |
+| Authentication      | Better-Auth                |
+| Frontend Framework  | Next.js (App Router)       |
+| Styling             | Tailwind CSS, Lucide React |
+| UI Components       | Radix UI                   |
+| Charts              | Recharts                   |
+| Bank Connectivity   | Teller API                 |
 
 ## Key Workflows
 

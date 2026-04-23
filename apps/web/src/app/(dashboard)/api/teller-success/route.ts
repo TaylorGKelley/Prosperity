@@ -1,17 +1,17 @@
-import { NextResponse } from "next/server";
-import { createGraphClient } from "@/lib/graphql";
+import { NextResponse } from 'next/server';
+import { createGraphClient } from '@/lib/graphql';
 import {
   type CreateAccountMutation,
   type CreateAccountMutationVariables,
-} from "@/lib/graphql/schema/operations";
-import { CREATE_ACCOUNT } from "@/lib/graphql/queries/accounts";
+} from '@/lib/graphql/schema/operations';
+import { CREATE_ACCOUNT } from '@/lib/graphql/queries/accounts';
 
 export async function POST(req: Request) {
   try {
     const data = await req.json();
 
     // Send Graph Mutation
-    const cookie = req.headers.get("cookie") ?? "";
+    const cookie = req.headers.get('cookie') ?? '';
     const client = await createGraphClient({ cookie });
 
     // Send account access token from the TellerConnect component to the server

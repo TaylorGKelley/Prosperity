@@ -298,7 +298,11 @@ type Query {
   category(id: String!): Category!
   savingGoals(budgetId: String!): [SavingGoal!]!
   savingGoal(id: String!): SavingGoal!
-  transactions(pagination: PaginationInput!, monthDate: DateTime!, budgetId: String!): PaginatedTransactions!
+  transactions(
+    pagination: PaginationInput!
+    monthDate: DateTime!
+    budgetId: String!
+  ): PaginatedTransactions!
   transaction(id: String!): Transaction!
 }
 

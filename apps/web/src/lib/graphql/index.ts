@@ -1,7 +1,7 @@
-import "server-only";
+import 'server-only';
 
-import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
-import { headers } from "next/headers";
+import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
+import { headers } from 'next/headers';
 
 type CreateGraphClientOptions = {
   cookie?: string;
@@ -15,9 +15,9 @@ type CreateGraphClientOptions = {
 const createHttpLinkWithCookies = async (cookie?: string) => {
   const resolvedCookie =
     cookie ??
-    (typeof headers !== "undefined"
-      ? ((await headers()).get("cookie") ?? "")
-      : "");
+    (typeof headers !== 'undefined'
+      ? ((await headers()).get('cookie') ?? '')
+      : '');
 
   return new HttpLink({
     uri: `${process.env.API_URL}/graphql`,
@@ -26,16 +26,16 @@ const createHttpLinkWithCookies = async (cookie?: string) => {
       const incoming = options.headers ?? {};
       const normalized = new Headers(incoming as HeadersInit);
       if (resolvedCookie) {
-        normalized.set("cookie", resolvedCookie);
+        normalized.set('cookie', resolvedCookie);
       }
-      return fetch(typeof uri === "string" ? uri : uri.toString(), {
+      return fetch(typeof uri === 'string' ? uri : uri.toString(), {
         ...options,
         headers: normalized,
         // ensure credentials are included if the server expects them
-        credentials: "include",
+        credentials: 'include',
       } as RequestInit);
     },
-    credentials: "include",
+    credentials: 'include',
   });
 };
 

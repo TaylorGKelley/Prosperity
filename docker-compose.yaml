@@ -8,16 +8,16 @@ services:
       POSTGRES_USER: prospering
       POSTGRES_PASSWORD: paonapowgnzjog!fa4p
     ports:
-      - "7700:5432"
+      - '7700:5432'
     volumes:
       - prosperity-database:/var/lib/postgresql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U prospering -d prosperity"]
+      test: ['CMD-SHELL', 'pg_isready -U prospering -d prosperity']
       interval: 10s
       timeout: 5s
       retries: 5
     profiles:
-      - "development"
+      - 'development'
 
 volumes:
   prosperity-database:
