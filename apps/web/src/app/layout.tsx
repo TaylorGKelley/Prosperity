@@ -2,7 +2,6 @@ import React from 'react';
 import { type Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import { AuthProvider } from '@/context/AuthProvider';
 
 const inter = Inter({
   variable: '--font-inter-sans',
@@ -31,12 +30,8 @@ export default async function RootLayout({
   return (
     <html lang='en'>
       <body className={`${inter.className} antialiased`}>
-        <AuthProvider>
-          {/* <ThemeProvider attribute='class' defaultTheme='system' enableSystem> */}
-          {children}
-          {/* <Toaster position='bottom-right' /> */}
-          {/* </ThemeProvider> */}
-        </AuthProvider>
+        {children}
+        {/* <Toaster position='bottom-right' /> */}
       </body>
     </html>
   );
