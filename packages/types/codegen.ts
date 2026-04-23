@@ -1,10 +1,17 @@
 import type { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
-  schema: 'http://localhost:3001/graphql', // /apps/api endpoint
+  schema: '../../apps/api/src/lib/graphql/schema/schema.gql',
   generates: {
-    './index.ts': {
+    './src/generated/graphql.ts': {
       plugins: ['typescript', 'typescript-operations'],
+      config: {
+        scalars: {
+          ID: "import('node:crypto').UUID",
+          Date: 'Date',
+          DateTime: 'Date',
+        },
+      },
     },
   },
 };
