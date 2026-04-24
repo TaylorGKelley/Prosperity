@@ -1,10 +1,15 @@
 import React from 'react';
 import { type Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, Playfair_Display } from 'next/font/google';
 import './globals.css';
 
 const inter = Inter({
   variable: '--font-inter-sans',
+  subsets: ['latin'],
+});
+
+const playfair = Playfair_Display({
+  variable: '--font-playfair-serif',
   subsets: ['latin'],
 });
 
@@ -29,7 +34,7 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className={`${inter.className} antialiased`}>
+      <body className={`${inter.variable} ${playfair.variable} font-sans antialiased`}>
         {children}
         {/* <Toaster position='bottom-right' /> */}
       </body>
