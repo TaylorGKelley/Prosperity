@@ -36,13 +36,13 @@ export default function BudgetsPage() {
                 <div className='flex items-end justify-between'>
                   <div className='space-y-1'>
                     <h3 className='text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground'>{b.category}</h3>
-                    <p className='text-3xl font-bold font-serif tabular-nums'>
+                    <p className='text-3xl font-medium font-serif tabular-nums'>
                       ${b.spent.toLocaleString()} <span className='text-muted-foreground font-sans text-sm font-medium tracking-normal'>/ ${b.limit.toLocaleString()}</span>
                     </p>
                   </div>
                   <div className='text-right space-y-1'>
                     <p className='text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground'>Remaining</p>
-                    <p className={`text-lg font-bold font-serif tabular-nums ${b.spent > b.limit ? 'text-destructive' : 'text-foreground'}`}>
+                    <p className={`text-lg font-medium font-serif tabular-nums ${b.spent > b.limit ? 'text-destructive' : 'text-foreground'}`}>
                       ${(b.limit - b.spent).toLocaleString()}
                     </p>
                   </div>
@@ -77,7 +77,7 @@ export default function BudgetsPage() {
             <div className='space-y-10'>
               <div className='space-y-3'>
                 <p className='text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground'>Current Burn Rate</p>
-                <p className='text-3xl font-bold font-serif tabular-nums'>$1,042 / day</p>
+                <p className='text-3xl font-medium font-serif tabular-nums'>$1,042 / day</p>
                 <p className='text-sm text-muted-foreground leading-relaxed'>
                   Projected to finish the fiscal period <span className='text-foreground font-bold'>4% under</span> established budget.
                 </p>
@@ -90,7 +90,7 @@ export default function BudgetsPage() {
                   <TrendingUp className='size-4' />
                   <span className='text-[9px] font-bold uppercase tracking-widest'>Optimization</span>
                 </div>
-                <h4 className='text-xl font-bold leading-snug font-serif'>Reduce Lifestyle flow by 12% to accelerate Portfolio growth.</h4>
+                <h4 className='text-xl font-medium leading-snug font-serif'>Reduce Lifestyle flow by 12% to accelerate Portfolio growth.</h4>
                 <Button variant='link' className='px-0'>
                   View Projection <ArrowRight className='size-3 ml-2' />
                 </Button>
@@ -98,7 +98,7 @@ export default function BudgetsPage() {
 
               <Card className='bg-background p-8 border-l-4 border-primary border-y-0 border-r-0'>
                 <h4 className='text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-2'>Year-to-Date Saving</h4>
-                <p className='text-3xl font-bold font-serif tabular-nums'>$42,840.12</p>
+                <p className='text-3xl font-medium font-serif tabular-nums'>$42,840.12</p>
               </Card>
             </div>
           </Card>

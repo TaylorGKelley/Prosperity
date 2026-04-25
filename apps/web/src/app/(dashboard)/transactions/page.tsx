@@ -51,10 +51,10 @@ export default function TransactionsPage() {
 
       <div className='flex items-center gap-6'>
         <div className='relative flex-1'>
-          <Search className='absolute left-0 top-3 size-4 text-muted-foreground' />
+          <Search className='absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground' />
           <Input 
             placeholder='Search transactions, merchants, or accounts...' 
-            className='pl-8 rounded-none border-x-0 border-t-0 border-b-2 border-muted shadow-none focus-visible:ring-0 px-0 h-12 bg-transparent text-lg' 
+            className='pl-10 rounded-none border-x-0 border-t-0 border-b-2 border-muted shadow-none focus-visible:ring-0 h-12 bg-transparent text-lg' 
           />
         </div>
         <Button variant='outline' className='h-12 px-6 border-2'>

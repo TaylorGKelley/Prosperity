@@ -12,7 +12,7 @@ export function Navbar() {
     .toUpperCase();
 
   return (
-    <header className='h-16 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 flex items-center justify-between px-8 sticky top-0 z-50'>
+    <header className='h-16 border-b bg-white/80 backdrop-blur flex items-center justify-between px-8 sticky top-0 z-50'>
       <div className='flex items-center gap-4 w-1/3'>
         <div className='relative w-full max-w-sm'>
           <Search className='absolute left-2.5 top-2.5 size-4 text-muted-foreground' />
