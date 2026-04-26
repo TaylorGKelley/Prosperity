@@ -1,5 +1,5 @@
 {
-  "id": "c0edc2b3-a2c4-47bf-abd0-06a781415b4a",
+  "id": "0014eef1-9734-4920-b974-a68ecb2273a6",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -110,8 +110,12 @@
           "name": "account_user_id_user_id_fk",
           "tableFrom": "account",
           "tableTo": "user",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -230,8 +234,12 @@
           "name": "passkey_user_id_user_id_fk",
           "tableFrom": "passkey",
           "tableTo": "user",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -318,8 +326,12 @@
           "name": "session_user_id_user_id_fk",
           "tableFrom": "session",
           "tableTo": "user",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -329,7 +341,9 @@
         "session_token_unique": {
           "name": "session_token_unique",
           "nullsNotDistinct": false,
-          "columns": ["token"]
+          "columns": [
+            "token"
+          ]
         }
       },
       "policies": {},
@@ -402,8 +416,12 @@
           "name": "two_factor_user_id_user_id_fk",
           "tableFrom": "two_factor",
           "tableTo": "user",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -478,7 +496,9 @@
         "user_email_unique": {
           "name": "user_email_unique",
           "nullsNotDistinct": false,
-          "columns": ["email"]
+          "columns": [
+            "email"
+          ]
         }
       },
       "policies": {},
@@ -602,8 +622,12 @@
           "name": "bank_budget_id_budget_id_fk",
           "tableFrom": "bank",
           "tableTo": "budget",
-          "columnsFrom": ["budget_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "budget_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -613,12 +637,16 @@
         "bank_id_unique": {
           "name": "bank_id_unique",
           "nullsNotDistinct": false,
-          "columns": ["id"]
+          "columns": [
+            "id"
+          ]
         },
         "bank_teller_id_unique": {
           "name": "bank_teller_id_unique",
           "nullsNotDistinct": true,
-          "columns": ["teller_id"]
+          "columns": [
+            "teller_id"
+          ]
         }
       },
       "policies": {},
@@ -660,7 +688,7 @@
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
-          "default": "'BRAIN'"
+          "default": "'PICKAXE'"
         },
         "color": {
           "name": "color",
@@ -668,7 +696,7 @@
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
-          "default": "'RED'"
+          "default": "'ORANGE'"
         },
         "start_date": {
           "name": "start_date",
@@ -690,8 +718,12 @@
           "name": "category_budget_id_budget_id_fk",
           "tableFrom": "category",
           "tableTo": "budget",
-          "columnsFrom": ["budget_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "budget_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -725,7 +757,7 @@
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
-          "default": "'PURPLE'"
+          "default": "'AMBER'"
         },
         "is_default": {
           "name": "is_default",
@@ -742,12 +774,16 @@
         "budget_id_unique": {
           "name": "budget_id_unique",
           "nullsNotDistinct": false,
-          "columns": ["id"]
+          "columns": [
+            "id"
+          ]
         },
         "budget_name_unique": {
           "name": "budget_name_unique",
           "nullsNotDistinct": false,
-          "columns": ["name"]
+          "columns": [
+            "name"
+          ]
         }
       },
       "policies": {},
@@ -828,8 +864,12 @@
           "name": "transaction_bank_id_bank_id_fk",
           "tableFrom": "transaction",
           "tableTo": "bank",
-          "columnsFrom": ["bank_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "bank_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -837,8 +877,12 @@
           "name": "transaction_category_id_category_id_fk",
           "tableFrom": "transaction",
           "tableTo": "category",
-          "columnsFrom": ["category_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "category_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -848,7 +892,9 @@
         "transaction_teller_id_unique": {
           "name": "transaction_teller_id_unique",
           "nullsNotDistinct": false,
-          "columns": ["teller_id"]
+          "columns": [
+            "teller_id"
+          ]
         }
       },
       "policies": {},
@@ -884,7 +930,7 @@
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
-          "default": "'BICEPS_FLEXED'"
+          "default": "'CITRUS'"
         },
         "color": {
           "name": "color",
@@ -892,7 +938,7 @@
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
-          "default": "'CYAN'"
+          "default": "'ORANGE'"
         },
         "target_amount": {
           "name": "target_amount",
@@ -934,8 +980,12 @@
           "name": "saving_goal_budget_id_budget_id_fk",
           "tableFrom": "saving_goal",
           "tableTo": "budget",
-          "columnsFrom": ["budget_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "budget_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -945,12 +995,16 @@
         "saving_goal_title_unique": {
           "name": "saving_goal_title_unique",
           "nullsNotDistinct": false,
-          "columns": ["title"]
+          "columns": [
+            "title"
+          ]
         },
         "saving_goal_budget_id_unique": {
           "name": "saving_goal_budget_id_unique",
           "nullsNotDistinct": false,
-          "columns": ["budget_id"]
+          "columns": [
+            "budget_id"
+          ]
         }
       },
       "policies": {},
@@ -980,8 +1034,12 @@
           "name": "user_budget_user_id_user_id_fk",
           "tableFrom": "user_budget",
           "tableTo": "user",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -989,8 +1047,12 @@
           "name": "user_budget_budget_id_budget_id_fk",
           "tableFrom": "user_budget",
           "tableTo": "budget",
-          "columnsFrom": ["budget_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "budget_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -998,7 +1060,10 @@
       "compositePrimaryKeys": {
         "user_budget_user_id_budget_id_pk": {
           "name": "user_budget_user_id_budget_id_pk",
-          "columns": ["user_id", "budget_id"]
+          "columns": [
+            "user_id",
+            "budget_id"
+          ]
         }
       },
       "uniqueConstraints": {},
@@ -1193,7 +1258,10 @@
     "public.status": {
       "name": "status",
       "schema": "public",
-      "values": ["POSTED", "PENDING"]
+      "values": [
+        "POSTED",
+        "PENDING"
+      ]
     },
     "public.transaction_type": {
       "name": "transaction_type",

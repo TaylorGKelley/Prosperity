@@ -16,8 +16,8 @@ import {
   budgetTable,
   userBudgetTable,
 } from 'src/lib/db/schema/schema';
-import { Bank } from 'src/lib/graphhql/bank.schema';
-import { CreateAccountInput } from 'src/lib/graphhql/inputs/bank.inputs';
+import { Bank } from 'src/lib/graphql/bank.schema';
+import { CreateAccountInput } from 'src/lib/graphql/inputs/bank.inputs';
 import { decrypt, encrypt } from 'src/utils/encryption.util';
 
 @Injectable({ scope: Scope.REQUEST })

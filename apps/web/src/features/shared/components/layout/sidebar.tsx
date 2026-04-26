@@ -3,8 +3,10 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Clock, Target, Building2, User } from 'lucide-react';
+import { LayoutDashboard, Clock, Target, Building2, User, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils/tw';
+import { authClient } from '@/lib/auth/auth';
+import { useRouter } from 'next/navigation';
 
 const navItems = [
   { name: 'Command Center', icon: LayoutDashboard, href: '/' },
@@ -15,6 +17,19 @@ const navItems = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { data: session } = authClient.useSession();
+
+  const handleLogout = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.push('/login');
+        },
+      },
+    });
+  };
+
   return (
     <aside className='w-64 border-r bg-[#F9F7F2] flex flex-col h-screen sticky top-0'>
       <div className='p-6'>
@@ -41,7 +56,7 @@ export function Sidebar() {
         ))}
       </nav>
 
-      <div className='p-4 mt-auto border-t border-muted/50'>
+      <div className='p-4 mt-auto border-t border-muted/50 space-y-2'>
         <Link 
           href='/account'
           className={cn(
@@ -53,10 +68,16 @@ export function Sidebar() {
             <User className='size-5 text-primary/70' />
           </div>
           <div className='flex-1 text-left'>
-            <p className='text-sm font-bold leading-tight'>Taylor Kelley</p>
+            <p className='text-sm font-bold leading-tight truncate'>{session?.user?.name || 'Taylor Kelley'}</p>
             <p className='text-[10px] text-muted-foreground uppercase tracking-widest font-bold'>Personal</p>
           </div>
         </Link>
+        <button 
+          onClick={handleLogout}
+          className='flex items-center gap-3 w-full px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-destructive transition-colors'
+        >
+          <LogOut className='size-3' /> End Session
+        </button>
       </div>
     </aside>
   );

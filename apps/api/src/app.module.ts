@@ -31,7 +31,7 @@ import { SavingGoalService } from './modules/savingGoal/savingGoal.service';
       driver: ApolloDriver,
       autoSchemaFile: join(
         process.cwd(),
-        './src/lib/graphhql/schema/schema.gql',
+        './src/lib/graphql/schema/schema.gql',
       ),
       context: ({ req, res }: { req: Request; res: Response }) => ({
         req,

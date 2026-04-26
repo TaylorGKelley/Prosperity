@@ -3,8 +3,8 @@ import { BudgetService } from './budget.service';
 import {
   CreateBudgetInput,
   UpdateBudgetInput,
-} from 'src/lib/graphhql/inputs/budget.inputs';
-import { Budget } from 'src/lib/graphhql/budget.schema';
+} from 'src/lib/graphql/inputs/budget.inputs';
+import { Budget } from 'src/lib/graphql/budget.schema';
 
 @Resolver()
 export class BudgetResolver {

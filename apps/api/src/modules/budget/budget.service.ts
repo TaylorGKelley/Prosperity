@@ -10,11 +10,11 @@ import {
   type DatabaseClient,
 } from 'src/lib/db/database.module';
 import { budgetTable, userBudgetTable } from 'src/lib/db/schema/schema';
-import { Budget } from 'src/lib/graphhql/budget.schema';
+import { Budget } from 'src/lib/graphql/budget.schema';
 import {
   CreateBudgetInput,
   UpdateBudgetInput,
-} from 'src/lib/graphhql/inputs/budget.inputs';
+} from 'src/lib/graphql/inputs/budget.inputs';
 
 @Injectable()
 export class BudgetService {

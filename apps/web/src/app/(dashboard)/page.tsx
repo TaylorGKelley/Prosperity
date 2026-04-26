@@ -22,28 +22,13 @@ import { Separator } from '@/features/shared/components/ui/separator';
 export default function OverviewPage() {
   return (
     <div className='p-10 space-y-10 max-w-7xl mx-auto'>
-      <PageHeader
-        title='Financial Summary'
-        description='Consolidated overview of capital and expenditure flow.'
-        metricLabel='Net Worth'
-        metricValue='$1,248,302.00'
-      >
-        <div className='flex gap-4 self-center mr-8'>
-          {['Overview', 'Expenditure', 'Growth'].map((tab) => (
-            <button
-              key={tab}
-              className={cn(
-                'text-[10px] font-bold uppercase tracking-[0.2em] transition-colors',
-                tab === 'Overview'
-                  ? 'text-foreground'
-                  : 'text-muted-foreground hover:text-foreground',
-              )}
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
-      </PageHeader>
+      <PageHeader 
+        title="Financial Summary"
+        description="Consolidated overview of capital and expenditure flow."
+        metricLabel="Net Worth"
+        metricValue="$1,248,302.00"
+        className='items-start'
+      />
 
       <div className='grid grid-cols-12 gap-10'>
         {/* Left Column: Expenditure Flow & Recent Activity */}
@@ -192,12 +177,15 @@ export default function OverviewPage() {
           {/* Card 1: Net Worth */}
           <Card className='p-8 bg-background'>
             <div className='space-y-6'>
-              <div className='flex justify-between items-start'>
-                <h3 className='text-[10px] font-bold uppercase tracking-[0.3em] text-muted-foreground'>Net Worth Analysis</h3>
-                <span className='text-[10px] font-bold text-emerald-500 uppercase tracking-widest'>+2.4% MoM</span>
-              </div>
+              <h3 className='text-[10px] font-bold uppercase tracking-[0.3em] text-muted-foreground'>Net Worth Analysis</h3>
               <div className='space-y-1'>
-                <p className='text-3xl font-medium font-serif'>$1,248,302</p>
+                <div className='flex items-baseline gap-3'>
+                  <p className='text-3xl font-medium font-serif'>$1,248,302</p>
+                  <span className='text-xs font-bold text-emerald-500 flex items-center gap-1'>
+                    <TrendingUp className='size-3' />
+                    2.4%
+                  </span>
+                </div>
                 <p className='text-[10px] font-bold text-muted-foreground uppercase tracking-widest'>Current Month Projection</p>
               </div>
               <NetWorthTrend />

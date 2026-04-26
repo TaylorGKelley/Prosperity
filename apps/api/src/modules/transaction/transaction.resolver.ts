@@ -4,8 +4,8 @@ import {
   PaginatedTransactions,
   SyncTransactions,
   Transaction,
-} from 'src/lib/graphhql/transaction.schema';
-import { PaginationInput } from 'src/lib/graphhql/inputs/utils.inputs';
+} from 'src/lib/graphql/transaction.schema';
+import { PaginationInput } from 'src/lib/graphql/inputs/utils.inputs';
 
 @Resolver()
 export class TransactionResolver {

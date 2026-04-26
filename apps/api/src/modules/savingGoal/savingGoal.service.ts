@@ -16,8 +16,8 @@ import {
 import {
   CreateSavingGoalInput,
   UpdateSavingGoalInput,
-} from 'src/lib/graphhql/inputs/savingGoal.inputs';
-import { SavingGoal } from 'src/lib/graphhql/savingGoal.schema';
+} from 'src/lib/graphql/inputs/savingGoal.inputs';
+import { SavingGoal } from 'src/lib/graphql/savingGoal.schema';
 
 @Injectable()
 export class SavingGoalService {

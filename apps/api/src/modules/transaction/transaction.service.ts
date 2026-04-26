@@ -28,9 +28,9 @@ import {
   transactionTable,
   userBudgetTable,
 } from 'src/lib/db/schema/schema';
-import { Color, Icon } from 'src/lib/graphhql/enums/category.enums';
-import { TransactionSyncStatus } from 'src/lib/graphhql/enums/transaction.enums';
-import { PaginationInput } from 'src/lib/graphhql/inputs/utils.inputs';
+import { Color, Icon } from 'src/lib/graphql/enums/category.enums';
+import { TransactionSyncStatus } from 'src/lib/graphql/enums/transaction.enums';
+import { PaginationInput } from 'src/lib/graphql/inputs/utils.inputs';
 import Cursor from 'src/utils/cursor.util';
 import { decrypt } from 'src/utils/encryption.util';
 import { REQUEST } from '@nestjs/core';

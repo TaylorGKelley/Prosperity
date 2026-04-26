@@ -3,8 +3,8 @@ import { CategoryService } from './category.service';
 import {
   CreateCategoryInput,
   UpdateCategoryInput,
-} from 'src/lib/graphhql/inputs/category.inputs';
-import { Category } from 'src/lib/graphhql/category.schema';
+} from 'src/lib/graphql/inputs/category.inputs';
+import { Category } from 'src/lib/graphql/category.schema';
 
 @Resolver()
 export class CategoryResolver {

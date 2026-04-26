@@ -26,12 +26,12 @@ import {
   transactionTable,
   userBudgetTable,
 } from 'src/lib/db/schema/schema';
-import { Category } from 'src/lib/graphhql/category.schema';
-import { Color, Icon } from 'src/lib/graphhql/enums/category.enums';
+import { Category } from 'src/lib/graphql/category.schema';
+import { Color, Icon } from 'src/lib/graphql/enums/category.enums';
 import {
   CreateCategoryInput,
   UpdateCategoryInput,
-} from 'src/lib/graphhql/inputs/category.inputs';
+} from 'src/lib/graphql/inputs/category.inputs';
 
 @Injectable()
 export class CategoryService {

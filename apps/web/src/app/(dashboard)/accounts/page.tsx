@@ -108,7 +108,6 @@ export default function AccountsPage() {
           >
             <RefreshCcw className='size-3 mr-2' /> Refresh Assets
           </Button>
-          <div className='h-10 w-px bg-muted' />
           <div className='text-right whitespace-nowrap'>
             <p className='text-[10px] font-bold uppercase text-muted-foreground tracking-[0.2em] mb-1'>
               Sync Status

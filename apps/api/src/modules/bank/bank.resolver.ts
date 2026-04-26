@@ -1,7 +1,7 @@
 import { Args, Query, Mutation, Resolver } from '@nestjs/graphql';
 import { BankService } from './bank.service';
-import { CreateAccountInput } from 'src/lib/graphhql/inputs/bank.inputs';
-import { Bank } from 'src/lib/graphhql/bank.schema';
+import { CreateAccountInput } from 'src/lib/graphql/inputs/bank.inputs';
+import { Bank } from 'src/lib/graphql/bank.schema';
 
 @Resolver()
 export class BankResolver {

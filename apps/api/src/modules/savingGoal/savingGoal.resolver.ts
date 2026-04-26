@@ -1,10 +1,10 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { SavingGoalService } from './savingGoal.service';
-import { SavingGoal } from 'src/lib/graphhql/savingGoal.schema';
+import { SavingGoal } from 'src/lib/graphql/savingGoal.schema';
 import {
   CreateSavingGoalInput,
   UpdateSavingGoalInput,
-} from 'src/lib/graphhql/inputs/savingGoal.inputs';
+} from 'src/lib/graphql/inputs/savingGoal.inputs';
 
 @Resolver()
 export class SavingGoalResolver {
