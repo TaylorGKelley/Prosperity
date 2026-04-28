@@ -6,6 +6,9 @@ import { env } from '../env';
 
 export const authClient = createAuthClient({
   basePath: '/api/auth',
-  baseURL: env.NEXT_PUBLIC_API_URL,
+  baseURL: env.NEXT_PUBLIC_WEB_URL,
+  emailAndPassword: {
+    enabled: true,
+  },
   plugins: [nextCookies(), twoFactor(), passkey()],
 });

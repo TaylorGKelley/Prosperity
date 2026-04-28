@@ -8,16 +8,9 @@ import {
   Landmark,
   CreditCard,
 } from 'lucide-react';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardFooter,
-} from '@/features/shared/components/ui/card';
+import { Card } from '@/features/shared/components/ui/card';
 import { Button } from '@/features/shared/components/ui/button';
 import { Badge } from '@/features/shared/components/ui/badge';
-import { PageHeader } from '@/features/shared/components/layout/page-header';
 
 const institutions = [
   {

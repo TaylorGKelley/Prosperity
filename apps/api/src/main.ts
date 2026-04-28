@@ -6,8 +6,8 @@ async function bootstrap() {
     bodyParser: false,
   });
   app.enableCors({
-    origin: '*', // TODO: change before deploying
-    credentials: 'include',
+    origin: process.env.WEB_URL,
+    credentials: true,
   });
   app.useGlobalGuards();
 

@@ -1,23 +1,17 @@
 import React from 'react';
 import {
-  ArrowUpRight,
   TrendingUp,
   TrendingDown,
   Target,
   ArrowUpCircle,
   ArrowDownCircle,
   AlertCircle,
-  ChevronRight,
-  Building2,
-  DollarSign,
-  Lightbulb,
 } from 'lucide-react';
 import { Card } from '@/features/shared/components/ui/card';
 import { Button } from '@/features/shared/components/ui/button';
 import { PageHeader } from '@/features/shared/components/layout/page-header';
 import { NetWorthTrend } from '@/features/shared/components/ui/net-worth-trend';
 import { cn } from '@/lib/utils/tw';
-import { Separator } from '@/features/shared/components/ui/separator';
 
 export default function OverviewPage() {
   return (

@@ -12,8 +12,11 @@
   "dependencies": {
     "@apollo/client": "^4.1.6",
     "@better-auth/passkey": "^1.4.18",
+    "@radix-ui/react-separator": "^1.1.8",
+    "@radix-ui/react-slot": "^1.2.4",
     "@repo/tailwind-config": "workspace:*",
     "@repo/types": "workspace:*",
+    "@tanstack/react-form": "^1.29.1",
     "better-auth": "^1.4.17",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

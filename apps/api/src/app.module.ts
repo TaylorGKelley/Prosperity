@@ -15,6 +15,8 @@ import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { BankClientModule } from './lib/bankClient/bankClient.module';
 import { authSettings } from './lib/auth/auth';
+import { MailModule } from './lib/mail/mail.module';
+import { MailService } from './lib/mail/mail.service';
 import { BankService } from './modules/bank/bank.service';
 import { BankResolver } from './modules/bank/bank.resolver';
 import { BudgetResolver } from './modules/budget/budget.resolver';
@@ -40,21 +42,35 @@ import { SavingGoalService } from './modules/savingGoal/savingGoal.service';
       }),
     }),
     AuthModule.forRootAsync({
-      imports: [DatabaseModule],
-      useFactory: (db: NodePgDatabase) => {
+      imports: [DatabaseModule, MailModule],
+      useFactory: (db: NodePgDatabase, mailService: MailService) => {
         return {
           auth: betterAuth({
             ...authSettings,
             database: drizzleAdapter(db, {
               provider: 'pg',
             }),
+            emailAndPassword: {
+              enabled: true,
+              ...authSettings.emailAndPassword,
+              sendResetPassword: async ({ user, url }) => {
+                await mailService.sendForgotPasswordEmail(user.email, url);
+              },
+            },
+            emailVerification: {
+              sendOnSignUp: true,
+              sendVerificationEmail: async ({ user, url }) => {
+                await mailService.sendVerificationEmail(user.email, url);
+              },
+            },
           }),
         };
       },
-      inject: [DATABASE_CONNECTION],
+      inject: [DATABASE_CONNECTION, MailService],
     }),
     DatabaseModule,
     BankClientModule,
+    MailModule,
   ],
   controllers: [HealthController],
   providers: [
